@@ -21,6 +21,15 @@
       "description": "Displays installation instructions with code snippets."
     },
     {
+      "name": "orbit-images",
+      "type": "registry:ui",
+      "files": [
+        "orbit-images"
+      ],
+      "category": "Components",
+      "description": "Displays a set of images in an orbiting motion."
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
       "files": [

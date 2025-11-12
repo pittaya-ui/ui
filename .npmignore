@@ -1,4 +1,3 @@
-# Arquivos a ignorar no publish do npm
 src/
 scripts/
 *.md
