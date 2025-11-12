@@ -1,0 +1,34 @@
+{
+  "name": "@pittaya-ui/cli",
+  "version": "0.0.1",
+  "description": "CLI to add the amazing Pittaya UI components to your project",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pittaya-ui/cli.git"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/cli",
+    "build:registry": "tsx scripts/build-registry.ts",
+    "dev": "npm run dev --workspace=packages/cli",
+    "release": "npm run build && npm run pub:release --workspace=packages/cli"
+  },
+  "keywords": [
+    "pittaya",
+    "ui",
+    "components",
+    "cli",
+    "react",
+    "nextjs"
+  ],
+  "author": "Pittaya UI",
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

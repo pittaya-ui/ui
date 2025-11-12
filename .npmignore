@@ -1,0 +1,12 @@
+# Arquivos a ignorar no publish do npm
+src/
+scripts/
+*.md
+!README.md
+tsconfig.json
+tsup.config.ts
+.git/
+.gitignore
+registry/
+node_modules/
+
