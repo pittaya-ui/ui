@@ -7,7 +7,7 @@ import { IComponentIndexItem } from "../packages/cli/src/interfaces/IComponentIn
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const GITHUB_REPO = "https://raw.githubusercontent.com/pittaya-ui/ui/main";
+const GITHUB_REPO = "https://raw.githubusercontent.com/pittaya-ui/ui-kit/main";
 const UI_COMPONENTS_INDEX_URL = `${GITHUB_REPO}/src/lib/docs/components-index.ts`;
 const UI_LIBRARIES_INDEX_URL = `${GITHUB_REPO}/src/lib/docs/libraries-index.ts`;
 const UI_COMPONENTS_BASE_URL = `${GITHUB_REPO}/src/components/ui`;
