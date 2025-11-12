@@ -3,9 +3,13 @@
   "version": "0.0.1",
   "description": "CLI to add the amazing Pittaya UI components to your project",
   "private": true,
+  "homepage": "https://pittaya-ui.vercel.app",
+  "bugs": {
+    "url": "https://github.com/pittaya-ui/ui/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pittaya-ui/cli.git"
+    "url": "git+https://github.com/pittaya-ui/ui.git"
   },
   "workspaces": [
     "packages/*"
