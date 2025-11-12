@@ -1,0 +1,54 @@
+{
+  "name": "pittaya",
+  "version": "0.0.1",
+  "description": "CLI para adicionar componentes Pittaya UI ao seu projeto",
+  "type": "module",
+  "bin": {
+    "pittaya": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "pub:release": "npm run build && npm publish --access public"
+  },
+  "keywords": [
+    "pittaya",
+    "ui",
+    "components",
+    "cli",
+    "react",
+    "nextjs"
+  ],
+  "author": "Pittaya UI",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pittaya-ui/cli.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/pittaya-ui/cli/issues"
+  },
+  "homepage": "https://github.com/pittaya-ui/cli#readme",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "execa": "^9.0.0",
+    "https-proxy-agent": "^7.0.4",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1",
+    "prompts": "^2.4.2",
+    "ts-morph": "^24.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}
+
