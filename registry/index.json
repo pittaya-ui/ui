@@ -1,0 +1,33 @@
+{
+  "$schema": "./schema.json",
+  "version": "0.0.1",
+  "components": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "files": [
+        "button"
+      ],
+      "category": "Actions",
+      "description": "Displays a button or a component that looks like a button."
+    },
+    {
+      "name": "installation-section",
+      "type": "registry:ui",
+      "files": [
+        "installation-section"
+      ],
+      "category": "Documentation",
+      "description": "Displays installation instructions with code snippets."
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "files": [
+        "utils"
+      ],
+      "category": "Library",
+      "description": "Utility functions for className management (includes cn function)"
+    }
+  ]
+}

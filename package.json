@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspace=packages/cli",
-    "build:registry": "tsx scripts/build-registry.ts",
+    "build:registry": "tsx --env-file=.env scripts/build-registry.ts",
     "dev": "npm run dev --workspace=packages/cli",
     "release": "npm run build && npm run pub:release --workspace=packages/cli"
   },
@@ -24,7 +24,7 @@
     "react",
     "nextjs"
   ],
-  "author": "Pittaya UI",
+  "author": "Pittaya Team",
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@types/node": "^20.19.25",
