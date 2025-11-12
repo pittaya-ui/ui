@@ -1,10 +1,10 @@
 # Pittaya UI CLI
 
-CLI to add Pittaya UI components to your React/Next.js project.
+CLI to add Pittaya UI components to your React/Next.js project
 
 ## 🚀 Installation
 
-No installation required! Use directly with `npx`:
+No installation required! Use directly with `npx` (Soon)
 
 ```bash
 npx pittaya@latest init
