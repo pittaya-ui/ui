@@ -26,13 +26,13 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pittaya-ui/cli.git",
+    "url": "git+https://github.com/pittaya-ui/ui.git",
     "directory": "packages/cli"
   },
   "bugs": {
-    "url": "https://github.com/pittaya-ui/cli/issues"
+    "url": "https://github.com/pittaya-ui/ui/issues"
   },
-  "homepage": "https://github.com/pittaya-ui/cli#readme",
+  "homepage": "https://pittaya-ui.vercel.app",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
