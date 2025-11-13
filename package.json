@@ -1,6 +1,6 @@
 {
   "name": "@pittaya-ui/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI to add the amazing Pittaya UI components to your project",
   "private": true,
   "homepage": "https://pittaya-ui.vercel.app",
