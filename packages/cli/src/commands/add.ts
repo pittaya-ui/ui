@@ -6,7 +6,7 @@ import fs from "fs/promises";
 import { execa } from "execa";
 import { fetchRegistry, getRegistryComponent } from "../utils/registry.js";
 import { transformImports } from "../utils/transformer.js";
-import { detectPackageManager } from "../utils/package-manager.js";
+import { detectPackageManager, checkMissingDependencies } from "../utils/package-manager.js";
 import { IAddOptions } from "../interfaces/IAddOptions";
 import { IConfig } from "../interfaces/IConfig";
 import { IRegistryComponent } from "../interfaces/IRegistryComponent";
@@ -97,11 +97,49 @@ async function addComponent(
     const packageManager = await detectPackageManager();
 
     if (component.dependencies && component.dependencies.length > 0) {
-      spinner.text = `Installing dependencies for ${name}...`;
-      await execa(packageManager, [
-        packageManager === "yarn" ? "add" : "install",
-        ...component.dependencies,
-      ]);
+      const missingDeps = await checkMissingDependencies(component.dependencies);
+
+      if (missingDeps.length > 0) {
+        spinner.stop();
+
+        console.log(chalk.yellow(`\n⚠️  ${name} requires the following dependencies:\n`));
+        missingDeps.forEach(dep => {
+          console.log(chalk.dim(`  • ${dep}`));
+        });
+        console.log();
+
+        // If --add-missing-deps was passed, install automatically
+        if (options.addMissingDeps) {
+          console.log(chalk.dim("Installing dependencies automatically...\n"));
+        } else {
+          const { install } = await prompts({
+            type: "confirm",
+            name: "install",
+            message: "Do you want to install the dependencies now?",
+            initial: true,
+          });
+
+          if (!install) {
+            console.log(chalk.yellow("\n⚠️  Component not installed. Install the dependencies manually and try again.\n"));
+            return;
+          }
+        }
+
+        spinner.start(`Installing dependencies for ${name}...`);
+
+        try {
+          await execa(packageManager, [
+            packageManager === "yarn" ? "add" : "install",
+            ...missingDeps,
+          ]);
+          spinner.succeed(`Dependencies installed!`);
+          spinner.start(`Installing ${chalk.bold(name)}...`);
+        } catch (error) {
+          spinner.fail(`Error installing dependencies`);
+          console.error(error);
+          return;
+        }
+      }
     }
 
     if (component.registryDependencies && component.registryDependencies.length > 0) {
