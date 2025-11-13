@@ -132,7 +132,7 @@ The `components.json` file stores your preferences:
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "ui": "@/components/pittaya/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
@@ -211,7 +211,7 @@ npx pittaya@latest init -y
 npx pittaya@latest add button
 
 # Verify
-cat components/ui/button.tsx
+cat components/pittaya/ui/button.tsx
 npm run dev
 ```
 

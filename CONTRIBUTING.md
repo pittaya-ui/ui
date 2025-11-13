@@ -207,7 +207,7 @@ ls -la components.json
 pittaya add button
 
 # Verify
-ls -la components/ui/button.tsx
+ls -la components/pittaya/ui/button.tsx
 
 # Test in Next.js app
 npm run dev

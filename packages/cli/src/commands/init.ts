@@ -93,7 +93,7 @@ export async function init(options: InitOptions) {
     aliases: {
       components: config.componentsPath || "@/components",
       utils: config.utilsPath || "@/lib/utils",
-      ui: `${config.componentsPath || "@/components"}/ui`,
+      ui: `${config.componentsPath || "@/components"}/pittaya/ui`,
       lib: "@/lib",
       hooks: "@/hooks",
     },
