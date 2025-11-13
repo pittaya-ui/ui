@@ -64,6 +64,40 @@ npx pittaya@latest add
 - `-y, --yes` - Overwrite existing files without prompting
 - `-o, --overwrite` - Overwrite existing files
 - `-a, --all` - Add all components
+- `--add-missing-deps` - Automatically install missing dependencies
+
+**Flag Comparison:**
+
+| Flag | Sobrescreve Arquivos | Instala Dependências Automaticamente |
+|------|---------------------|--------------------------------------|
+| `--yes` | ✅ Sim | ❌ Não |
+| `--add-missing-deps` | ❌ Não | ✅ Sim |
+| `--yes --add-missing-deps` | ✅ Sim | ✅ Sim |
+
+#### Dependency Management
+
+When adding a component, the CLI automatically checks for required dependencies. If any are missing, you'll see:
+
+```bash
+npx pittaya@latest add button
+```
+
+**Output:**
+```
+⚠️  button requer as seguintes dependências:
+
+  • @radix-ui/react-slot
+
+? Deseja instalar as dependências agora? › (Y/n)
+```
+
+**Skip the prompt with `--add-missing-deps`:**
+
+```bash
+npx pittaya@latest add button --add-missing-deps
+```
+
+This will automatically install all missing dependencies without asking.
 
 ## 🎨 Available Components
 

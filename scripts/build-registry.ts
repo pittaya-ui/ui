@@ -91,15 +91,38 @@ async function getOfficialComponents(): Promise<IComponentIndexItem[]> {
 function parseComponentsIndex(content: string): IComponentIndexItem[] {
   const items: IComponentIndexItem[] = [];
 
-  const blockRegex = /\{[^}]*slug:\s*["']([^"']+)["'][^}]*description:\s*["']([^"']+)["'][^}]*category:\s*["']([^"']+)["'][^}]*\}/g;
+  // Regex mais flexível para capturar o bloco completo
+  const blockRegex = /\{[^}]*slug:\s*["']([^"']+)["'][^}]*\}/gs;
 
   let match;
   while ((match = blockRegex.exec(content)) !== null) {
-    items.push({
-      slug: match[1],
-      description: match[2],
-      category: match[3],
-    });
+    const block = match[0];
+
+    const slugMatch = block.match(/slug:\s*["']([^"']+)["']/);
+    const descMatch = block.match(/description:\s*["']([^"']+)["']/);
+    const categoryMatch = block.match(/category:\s*["']([^"']+)["']/);
+    const depsMatch = block.match(/dependencies:\s*\[(.*?)\]/s);
+
+    if (slugMatch && descMatch && categoryMatch) {
+      const item: IComponentIndexItem = {
+        slug: slugMatch[1],
+        description: descMatch[1],
+        category: categoryMatch[1],
+      };
+
+      if (depsMatch) {
+        const depsString = depsMatch[1];
+        const deps = depsString
+          .match(/["']([^"']+)["']/g)
+          ?.map(d => d.replace(/["']/g, '')) || [];
+
+        if (deps.length > 0) {
+          item.dependencies = deps;
+        }
+      }
+
+      items.push(item);
+    }
   }
 
   return items;
@@ -175,7 +198,7 @@ async function buildRegistry() {
   console.log("📦 Processing components...");
 
   for (const item of officialComponents) {
-    const { slug: componentName, description, category } = item;
+    const { slug: componentName, description, category, dependencies: indexDependencies } = item;
     const isLibrary = category === "Library";
     const content = await getComponentContent(componentName, category);
 
@@ -190,7 +213,10 @@ async function buildRegistry() {
     const fileName = `${componentName}${fileExtension}`;
 
     const dependencies: string[] = [];
-    if (componentName === "utils") {
+
+    if (indexDependencies && indexDependencies.length > 0) {
+      dependencies.push(...indexDependencies);
+    } else if (componentName === "utils") {
       dependencies.push("clsx", "tailwind-merge");
     } else if (!isLibrary) {
       const extracted = extractNpmDependencies(content);
