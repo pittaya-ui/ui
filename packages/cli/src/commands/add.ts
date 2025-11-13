@@ -79,11 +79,43 @@ export async function add(components: string[], options: IAddOptions) {
   console.log(chalk.green("\n✅ Components added successfully!\n"));
 }
 
+async function isComponentInstalled(
+  name: string,
+  config: IConfig
+): Promise<boolean> {
+  try {
+    const component: IRegistryComponent = await getRegistryComponent(name);
+    if (!component) return false;
+
+    for (const file of component.files) {
+      const targetPath = resolveTargetPath(file.name, component.type, config);
+      const filePath = path.join(process.cwd(), targetPath);
+
+      const exists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!exists) return false;
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function addComponent(
   name: string,
   config: IConfig,
   options: IAddOptions
 ) {
+  const alreadyInstalled = await isComponentInstalled(name, config);
+  if (alreadyInstalled && !options.overwrite) {
+    console.log(chalk.dim(`   ⏭️  ${name} already installed, skipping...`));
+    return;
+  }
+
   const spinner = ora(`Installing ${chalk.bold(name)}...`).start();
 
   try {
@@ -143,10 +175,15 @@ async function addComponent(
     }
 
     if (component.registryDependencies && component.registryDependencies.length > 0) {
+      spinner.stop();
+      console.log(chalk.dim(`\n   📦 ${name} requires: ${component.registryDependencies.join(", ")}`));
+
       for (const dep of component.registryDependencies) {
-        spinner.text = `Installing dependency ${dep}...`;
         await addComponent(dep, config, { ...options, yes: true });
       }
+
+      console.log(); // Linha em branco
+      spinner.start(`Installing ${chalk.bold(name)}...`);
     }
 
     for (const file of component.files) {

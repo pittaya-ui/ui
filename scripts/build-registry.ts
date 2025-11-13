@@ -91,7 +91,6 @@ async function getOfficialComponents(): Promise<IComponentIndexItem[]> {
 function parseComponentsIndex(content: string): IComponentIndexItem[] {
   const items: IComponentIndexItem[] = [];
 
-  // Regex mais flexível para capturar o bloco completo
   const blockRegex = /\{[^}]*slug:\s*["']([^"']+)["'][^}]*\}/gs;
 
   let match;
@@ -102,6 +101,7 @@ function parseComponentsIndex(content: string): IComponentIndexItem[] {
     const descMatch = block.match(/description:\s*["']([^"']+)["']/);
     const categoryMatch = block.match(/category:\s*["']([^"']+)["']/);
     const depsMatch = block.match(/dependencies:\s*\[(.*?)\]/s);
+    const internalDepsMatch = block.match(/internalDependencies:\s*\[(.*?)\]/s);
 
     if (slugMatch && descMatch && categoryMatch) {
       const item: IComponentIndexItem = {
@@ -118,6 +118,17 @@ function parseComponentsIndex(content: string): IComponentIndexItem[] {
 
         if (deps.length > 0) {
           item.dependencies = deps;
+        }
+      }
+
+      if (internalDepsMatch) {
+        const internalDepsString = internalDepsMatch[1];
+        const internalDeps = internalDepsString
+          .match(/["']([^"']+)["']/g)
+          ?.map(d => d.replace(/["']/g, '')) || [];
+
+        if (internalDeps.length > 0) {
+          item.internalDependencies = internalDeps;
         }
       }
 
@@ -198,7 +209,7 @@ async function buildRegistry() {
   console.log("📦 Processing components...");
 
   for (const item of officialComponents) {
-    const { slug: componentName, description, category, dependencies: indexDependencies } = item;
+    const { slug: componentName, description, category, dependencies: indexDependencies, internalDependencies } = item;
     const isLibrary = category === "Library";
     const content = await getComponentContent(componentName, category);
 
@@ -223,12 +234,19 @@ async function buildRegistry() {
       if (extracted) dependencies.push(...extracted);
     }
 
+    const registryDepsFromContent = isLibrary ? [] : extractRegistryDependencies(content);
+    const registryDeps = new Set<string>(registryDepsFromContent);
+
+    if (internalDependencies && internalDependencies.length > 0) {
+      internalDependencies.forEach(dep => registryDeps.add(dep));
+    }
+
     const component: IRegistryComponent = {
       name: componentName,
       type: isLibrary ? "registry:lib" : "registry:ui",
       description,
       dependencies: dependencies.length > 0 ? dependencies : undefined,
-      registryDependencies: isLibrary ? undefined : extractRegistryDependencies(content),
+      registryDependencies: registryDeps.size > 0 ? Array.from(registryDeps).sort() : undefined,
       files: [
         {
           name: fileName,

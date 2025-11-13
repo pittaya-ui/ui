@@ -10,6 +10,17 @@ No installation required! Use directly with `npx` (Soon)
 npx pittaya@latest init
 ```
 
+## ✨ Features
+
+- 🎯 **Smart Installation** - Automatically detects and skips already installed components
+- 🔗 **Dependency Management** - Intelligently installs component dependencies
+- 🛡️ **Preserves Customizations** - Won't overwrite your modified components
+- 📦 **Internal Dependencies** - Components can declare dependencies on other Pittaya components
+- ⚡ **Fast & Efficient** - Only installs what's needed
+- 🎨 **Import Transformation** - Automatically adjusts imports to your project structure
+- 🌐 **GitHub Registry** - Components served via free CDN
+- 🔄 **Idempotent** - Safe to run multiple times
+
 ## 📖 Usage
 
 ### Initialize Pittaya UI in your project
@@ -74,6 +85,40 @@ npx pittaya@latest add
 | `--add-missing-deps` | ❌ Não | ✅ Sim |
 | `--yes --add-missing-deps` | ✅ Sim | ✅ Sim |
 
+### ⏭️ Smart Component Installation
+
+The CLI automatically detects if a component is already installed and **skips reinstallation** to preserve your customizations:
+
+```bash
+# Install orbit-images (which depends on button and utils)
+npx pittaya@latest add orbit-images
+```
+
+**First run:**
+```
+📦 orbit-images requires: button, utils
+✓ button installed successfully!
+✓ utils installed successfully!
+✓ orbit-images installed successfully!
+```
+
+**Second run (components already installed):**
+```
+⏭️  orbit-images already installed, skipping...
+```
+
+**Benefits:**
+- 🛡️ **Preserves Customizations** - Your modified components won't be overwritten
+- ⚡ **Faster Installation** - Doesn't reinstall dependencies unnecessarily
+- 🔄 **Idempotent** - Running the same command multiple times is safe
+
+**Force Reinstallation:**
+```bash
+npx pittaya@latest add button --overwrite
+```
+
+> 📖 **Learn more:** See [SKIP_INSTALLED.md](./SKIP_INSTALLED.md) for detailed documentation.
+
 #### Dependency Management
 
 When adding a component, the CLI automatically checks for required dependencies. If any are missing, you'll see:
@@ -112,6 +157,55 @@ This will automatically install all missing dependencies without asking.
 
 > 💡 **Note:** New components are automatically added when you add them to the `components-index.ts` file in the UI project and run `npm run build:registry`.
 
+## 💡 Practical Examples
+
+### Customization Workflow
+
+```bash
+# 1. Install a component
+npx pittaya add button
+
+# 2. Customize it in your project
+# Edit: src/components/pittaya/ui/button.tsx
+# Add your own styles, logic, etc.
+
+# 3. Install other components that depend on button
+npx pittaya add modal card dialog orbit-images
+
+# ✅ Result: Your customized button is preserved!
+# Only modal, card, dialog, and orbit-images are installed
+```
+
+### Managing Dependencies
+
+```bash
+# Install a component with multiple dependencies
+npx pittaya add orbit-images
+
+# Output:
+# 📦 orbit-images requires: button, utils
+# ✓ button installed successfully!
+# ✓ utils installed successfully!
+# ✓ orbit-images installed successfully!
+
+# Run again - nothing is reinstalled
+npx pittaya add orbit-images
+
+# Output:
+# ⏭️  orbit-images already installed, skipping...
+```
+
+### Force Reinstallation
+
+```bash
+# Want to reset a component to its original state?
+npx pittaya add button --overwrite
+
+# This will:
+# ✅ Overwrite the existing button.tsx
+# ✅ Keep your other customized components intact
+```
+
 ## 🔧 Configuration
 
 The `components.json` file stores your preferences:
@@ -141,6 +235,46 @@ The `components.json` file stores your preferences:
 ```
 
 ## 🔄 Building Registry (For Maintainers)
+
+### 🔗 Internal Dependencies
+
+Components can declare dependencies on other Pittaya components using `internalDependencies` in the `components-index.ts` file:
+
+```typescript
+// ui/src/lib/docs/components-index.ts
+{
+  slug: "orbit-images",
+  name: "Orbit Images",
+  description: "Displays a set of images in an orbiting motion.",
+  category: "Components",
+  dependencies: ["framer-motion"],        // NPM dependencies
+  internalDependencies: ["button"],       // Pittaya components
+}
+```
+
+**When the registry is built**, `internalDependencies` are automatically added to `registryDependencies`:
+
+```json
+{
+  "name": "orbit-images",
+  "registryDependencies": [
+    "button",  // ⬅️ From internalDependencies
+    "utils"    // ⬅️ Auto-detected from code
+  ]
+}
+```
+
+**When a user installs** the component, all dependencies are automatically installed:
+
+```bash
+npx pittaya add orbit-images
+```
+
+This will automatically install: `orbit-images` → `button` → `utils`
+
+> 📖 **Learn more:** See [INTERNAL_DEPENDENCIES.md](./INTERNAL_DEPENDENCIES.md) for detailed documentation.
+
+---
 
 The registry can be built from two sources. Configure via `.env` file:
 
@@ -281,15 +415,62 @@ npm publish --otp=123456
 ## 🎯 How It Works
 
 1. **GitHub Registry** - Components are hosted via GitHub Raw (free CDN)
-2. **Automatic Installation** - npm dependencies and related components are installed automatically
-3. **Import Transformation** - Imports are adjusted according to your aliases
-4. **No Vendor Lock-in** - Components are copied to your project, you have full control
+2. **Smart Detection** - CLI checks if components are already installed before adding them
+3. **Internal Dependencies** - Components can declare dependencies on other Pittaya components via `internalDependencies`
+4. **Automatic Installation** - NPM dependencies and related components are installed automatically
+5. **Skip Installed** - Already installed components are skipped to preserve customizations
+6. **Import Transformation** - Imports are adjusted according to your aliases
+7. **No Vendor Lock-in** - Components are copied to your project, you have full control
+
+### Installation Flow
+
+```
+User runs: npx pittaya add orbit-images
+
+1. Check if orbit-images is installed ✓
+   └─ Not installed, proceed
+
+2. Fetch orbit-images from registry ✓
+   └─ Found: registryDependencies: [button, utils]
+
+3. Install dependencies:
+   ├─ Check if button is installed
+   │  └─ Not installed, install button
+   │     ├─ Check NPM deps: @radix-ui/react-slot
+   │     └─ Install to: src/components/pittaya/ui/button.tsx
+   │
+   └─ Check if utils is installed
+      └─ Not installed, install utils
+         ├─ Check NPM deps: clsx, tailwind-merge
+         └─ Install to: src/lib/utils.ts
+
+4. Install orbit-images ✓
+   └─ Install to: src/components/pittaya/ui/orbit-images.tsx
+
+✅ Done! All components and dependencies installed.
+```
+
+**On second run:**
+```
+User runs: npx pittaya add orbit-images
+
+1. Check if orbit-images is installed ✓
+   └─ Already installed, skip!
+
+⏭️ orbit-images already installed, skipping...
+```
 
 ## 🔗 Links
 
-- [Documentation](https://pittaya-ui.vercel.app)
-- [GitHub](https://github.com/pittaya-ui/cli)
-- [Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/index.json)
+### Documentation
+- [Main Documentation](https://pittaya-ui.vercel.app)
+- [Internal Dependencies Guide](./INTERNAL_DEPENDENCIES.md)
+- [Skip Installed Components Guide](./SKIP_INSTALLED.md)
+
+### Repository
+- [GitHub - CLI](https://github.com/pittaya-ui/cli)
+- [GitHub - UI Components](https://github.com/pittaya-ui/ui)
+- [Component Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/index.json)
 
 ## 🤝 Contributing
 
