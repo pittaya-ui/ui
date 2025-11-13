@@ -24,6 +24,7 @@ program
   .option("-y, --yes", "Skip confirmations and overwrite existing files")
   .option("-o, --overwrite", "Overwrite existing files")
   .option("-a, --all", "Add all available components")
+  .option("--add-missing-deps", "Automatically install missing dependencies")
   .action(add);
 
 program
