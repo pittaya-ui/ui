@@ -3,6 +3,15 @@
   "version": "0.0.1",
   "components": [
     {
+      "name": "announcement-badge",
+      "type": "registry:ui",
+      "files": [
+        "announcement-badge"
+      ],
+      "category": "Components",
+      "description": "Displays a badge with an icon and a title."
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "files": [
@@ -10,6 +19,15 @@
       ],
       "category": "Actions",
       "description": "Displays a button or a component that looks like a button."
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "files": [
+        "copy-button"
+      ],
+      "category": "Actions",
+      "description": "Displays a copy button that copies the text to the clipboard when clicked."
     },
     {
       "name": "installation-section",
