@@ -23,7 +23,7 @@
     "nextjs"
   ],
   "author": "Pittaya UI",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pittaya-ui/ui.git",

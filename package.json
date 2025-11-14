@@ -29,7 +29,7 @@
     "nextjs"
   ],
   "author": "Pittaya Team",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.19.25",
     "tsx": "^4.7.0",

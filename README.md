@@ -30,6 +30,7 @@ npx pittaya@latest init
 ```
 
 This command will:
+
 - Create a `components.json` file with your preferences
 - Install required base dependencies
 - Configure import aliases
@@ -79,11 +80,11 @@ npx pittaya@latest add
 
 **Flag Comparison:**
 
-| Flag | Sobrescreve Arquivos | Instala Dependências Automaticamente |
-|------|---------------------|--------------------------------------|
-| `--yes` | ✅ Sim | ❌ Não |
-| `--add-missing-deps` | ❌ Não | ✅ Sim |
-| `--yes --add-missing-deps` | ✅ Sim | ✅ Sim |
+| Flag                         | Sobrescreve Arquivos | Instala Dependências Automaticamente |
+| ---------------------------- | -------------------- | ------------------------------------- |
+| `--yes`                    | ✅ Sim               | ❌ Não                               |
+| `--add-missing-deps`       | ❌ Não              | ✅ Sim                                |
+| `--yes --add-missing-deps` | ✅ Sim               | ✅ Sim                                |
 
 ### ⏭️ Smart Component Installation
 
@@ -95,6 +96,7 @@ npx pittaya@latest add orbit-images
 ```
 
 **First run:**
+
 ```
 📦 orbit-images requires: button, utils
 ✓ button installed successfully!
@@ -103,16 +105,19 @@ npx pittaya@latest add orbit-images
 ```
 
 **Second run (components already installed):**
+
 ```
 ⏭️  orbit-images already installed, skipping...
 ```
 
 **Benefits:**
+
 - 🛡️ **Preserves Customizations** - Your modified components won't be overwritten
 - ⚡ **Faster Installation** - Doesn't reinstall dependencies unnecessarily
 - 🔄 **Idempotent** - Running the same command multiple times is safe
 
 **Force Reinstallation:**
+
 ```bash
 npx pittaya@latest add button --overwrite
 ```
@@ -128,6 +133,7 @@ npx pittaya@latest add button
 ```
 
 **Output:**
+
 ```
 ⚠️  button requer as seguintes dependências:
 
@@ -147,12 +153,15 @@ This will automatically install all missing dependencies without asking.
 ## 🎨 Available Components
 
 ### Actions
+
 - **button** - Displays a button or a component that looks like a button
 
 ### Documentation
+
 - **installation-section** - Displays installation instructions with code snippets
 
 ### Library
+
 - **utils** - Utility functions for className
 
 > 💡 **Note:** New components are automatically added when you add them to the `components-index.ts` file in the UI project and run `npm run build:registry`.
@@ -281,11 +290,13 @@ The registry can be built from two sources. Configure via `.env` file:
 ### ⚙️ Configuration
 
 1. **Copy the template:**
+
 ```bash
 cp .env.example .env
 ```
 
 2. **Edit `.env`:**
+
 ```bash
 # GitHub mode (default) - Fetches from repository
 USE_LOCAL_UI=false
@@ -303,6 +314,7 @@ npm run build:registry
 ```
 
 **Advantages:**
+
 - ✅ No need to clone UI repository
 - ✅ Always uses latest from `main` branch
 - ✅ Works in CI/CD environments
@@ -321,14 +333,15 @@ npm run build:registry
 ```
 
 **When to use:**
+
 - Testing unreleased components
 - Working on UI and CLI simultaneously
 - No internet connection
 
 ---
 
-
 ✅ **Expected output:**
+
 ```
 + pittaya@0.0.1
 ```
@@ -390,6 +403,7 @@ git push
 ### Common Publishing Issues
 
 **Error: "Package name already taken"**
+
 ```bash
 # Update name in packages/cli/package.json
 {
@@ -398,6 +412,7 @@ git push
 ```
 
 **Error: "Permission denied"**
+
 ```bash
 npm whoami  # Check if logged in
 npm logout
@@ -405,6 +420,7 @@ npm login
 ```
 
 **Error: "Must provide one-time password"**
+
 ```bash
 # 2FA is enabled, use OTP from authenticator app
 npm publish --otp=123456
@@ -451,6 +467,7 @@ User runs: npx pittaya add orbit-images
 ```
 
 **On second run:**
+
 ```
 User runs: npx pittaya add orbit-images
 
@@ -463,11 +480,13 @@ User runs: npx pittaya add orbit-images
 ## 🔗 Links
 
 ### Documentation
+
 - [Main Documentation](https://pittaya-ui.vercel.app)
 - [Internal Dependencies Guide](./INTERNAL_DEPENDENCIES.md)
 - [Skip Installed Components Guide](./SKIP_INSTALLED.md)
 
 ### Repository
+
 - [GitHub - CLI](https://github.com/pittaya-ui/cli)
 - [GitHub - UI Components](https://github.com/pittaya-ui/ui)
 - [Component Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/index.json)
@@ -483,5 +502,3 @@ Contributions are welcome! See our [contribution guide](CONTRIBUTING.md).
 See [LICENSE](./LICENSE) for full terms.
 
 © 2025 Pittaya UI - All rights reserved
-
-

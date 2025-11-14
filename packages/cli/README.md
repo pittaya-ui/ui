@@ -1,41 +1,55 @@
-# Pittaya CLI
+# Pittaya UI
 
-CLI to add Pittaya UI components to your project.
+<div>
+  <img src="https://img.shields.io/npm/dy/pittaya" alt="npm downloads" />
+  <img src="https://img.shields.io/npm/v/pittaya" alt="npm version" />
+  <img src="https://img.shields.io/github/license/pittaya-ui/ui" alt="license" />
+</div>
 
-See the [full documentation](https://github.com/pittaya-ui/cli#readme) for more information.
+A CLI for adding components to your project.
 
-## Quick Start
+Usage
+
+Use the `init` command to initialize dependencies for a new project.
+
+The `init` command installs dependencies, adds the `cn` util, configures `tailwind.config.js`, and CSS variables for the project.
 
 ```bash
-npx pittaya@latest init
-npx pittaya@latest add button
+npx pittaya init
 ```
 
-### Local Setup
+## add
+
+Use the `add` command to add components to your project.
+
+The `add` command adds a component to your project and installs all required dependencies.
 
 ```bash
-# 1. Clone the repository
-git clone git@github.com:pittaya-ui/cli.git
-cd cli
-
-# 2. Install dependencies
-npm install
-
-# 3. Build the CLI
-cd packages/cli
-npm run build
-
-# 4. Link to test
-npm link
-
-# 5. Test in another project
-cd /path/to/test-project
-pittaya init
-pittaya add button
+npx pittaya add [component]
 ```
 
-## Links
+### Example
 
-- [Documentation](https://pittaya-ui.vercel.app)
-- [GitHub](https://github.com/pittaya-ui/cli)
+```bash
+npx pittaya add orbit-images
+```
 
+You can also run the command without any arguments to view a list of all available components:
+
+```bash
+npx pittaya add
+```
+
+## Documentation
+
+Visit https://pittaya-ui.vercel.app to view the documentation.
+
+## Contributors
+
+<a href="https://github.com/pittaya-ui/ui-kit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=pittaya-ui/ui-kit" />
+</a>
+
+## License
+
+Licensed under the [MIT license](https://github.com/pittaya-ui/cli/blob/main/LICENSE.md).

@@ -220,7 +220,11 @@ async function buildRegistry() {
 
     console.log(`   ✓ ${componentName} ${isLibrary ? "(lib)" : "(ui)"}`);
 
-    const fileExtension = content.includes("React") || content.includes("jsx") ? ".tsx" : ".ts";
+    const hasReactImport = /from ['"]react['"]/.test(content);
+    const hasJSX = /<[A-Z][a-zA-Z]*/.test(content) || /<(div|span|button|input|form|img|a|p|h[1-6])/.test(content);
+    const isUIComponent = !isLibrary;
+
+    const fileExtension = (hasReactImport || hasJSX || isUIComponent) ? ".tsx" : ".ts";
     const fileName = `${componentName}${fileExtension}`;
 
     const dependencies: string[] = [];
