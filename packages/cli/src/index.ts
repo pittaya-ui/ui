@@ -5,13 +5,22 @@ import { init } from "./commands/init.js";
 import { credits } from "./commands/credits.js";
 import { diff } from "./commands/diff.js";
 import { update } from "./commands/update.js";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(
+  readFileSync(join(__dirname, "../package.json"), "utf-8")
+);
 
 const program = new Command();
 
 program
   .name("pittaya")
   .description("Add Pittaya UI components to your project")
-  .version("0.0.1");
+  .version(packageJson.version);
 
 program
   .command("init")
