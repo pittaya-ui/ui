@@ -1,31 +1,31 @@
-# ⏭️ Skip de Componentes Já Instalados
+# ⏭️ Skip Already Installed Components
 
-## 📋 Funcionalidade
+## 📋 Feature
 
-O CLI agora detecta automaticamente se um componente já está instalado e **ignora a instalação** para evitar sobreposição de arquivos. Isso é especialmente útil quando:
+The CLI now automatically detects if a component is already installed and **skips installation** to avoid file overwriting. This is especially useful when:
 
-- Um componente é instalado manualmente primeiro
-- Múltiplos componentes dependem do mesmo componente (ex: vários componentes usam `button`)
-- Você reinstala componentes após fazer customizações
+- A component is manually installed first
+- Multiple components depend on the same component (e.g., several components use `button`)
+- You reinstall components after making customizations
 
-## 🎯 Como Funciona
+## 🎯 How It Works
 
-### Verificação Automática
+### Automatic Verification
 
-Antes de instalar qualquer componente, o CLI:
+Before installing any component, the CLI:
 
-1. ✅ Busca o componente no registry
-2. ✅ Verifica se **todos os arquivos** do componente existem no projeto
-3. ✅ Se existirem, pula a instalação
-4. ✅ Se não existirem, instala normalmente
+1. ✅ Fetches component from registry
+2. ✅ Checks if **all files** of the component exist in the project
+3. ✅ If they exist, skips installation
+4. ✅ If they don't exist, installs normally
 
-### Fluxo de Instalação
+### Installation Flow
 
 ```bash
 npx pittaya add orbit-images
 ```
 
-**Saída esperada:**
+**Expected output:**
 
 ```
 Adding 1 component(s)...
@@ -39,30 +39,30 @@ Adding 1 component(s)...
 ✅ Components added successfully!
 ```
 
-## 📝 Exemplos Práticos
+## 📝 Practical Examples
 
-### Exemplo 1: Dependência Duplicada
+### Example 1: Duplicate Dependency
 
 ```bash
-# Instalar button primeiro
+# Install button first
 npx pittaya add button
 
-# Depois instalar orbit-images (que depende de button)
+# Then install orbit-images (which depends on button)
 npx pittaya add orbit-images
 ```
 
-**Resultado:**
-- `button` é instalado na primeira vez
-- `orbit-images` detecta que `button` já existe e **não reinstala**
-- Suas customizações em `button` são preservadas
+**Result:**
+- `button` is installed the first time
+- `orbit-images` detects that `button` already exists and **doesn't reinstall**
+- Your customizations to `button` are preserved
 
-### Exemplo 2: Múltiplos Componentes com Mesma Dependência
+### Example 2: Multiple Components with Same Dependency
 
 ```bash
 npx pittaya add modal card dialog
 ```
 
-Todos dependem de `button` e `utils`:
+All depend on `button` and `utils`:
 
 ```
    📦 modal requires: button, utils
@@ -81,205 +81,205 @@ Todos dependem de `button` e `utils`:
    ✓ dialog installed successfully!
 ```
 
-### Exemplo 3: Reinstalação Segura
+### Example 3: Safe Reinstallation
 
 ```bash
-# Você customizou o button.tsx
-# Mas precisa reinstalar outro componente
+# You customized button.tsx
+# But need to reinstall another component
 
 npx pittaya add orbit-images
 ```
 
-**Resultado:**
-- `button` customizado é **preservado** (não é reinstalado)
-- Apenas `orbit-images` é instalado
+**Result:**
+- Customized `button` is **preserved** (not reinstalled)
+- Only `orbit-images` is installed
 
-## 🔧 Forçar Reinstalação
+## 🔧 Force Reinstallation
 
-Se você **quer** sobrescrever componentes existentes, use a flag `--overwrite`:
+If you **want** to overwrite existing components, use the `--overwrite` flag:
 
 ```bash
 npx pittaya add button --overwrite
 ```
 
-ou
+or
 
 ```bash
 npx pittaya add orbit-images --overwrite
 ```
 
-Com `--overwrite`:
-- ✅ Componente principal é reinstalado
-- ✅ Dependências também são reinstaladas (sobrescrevendo arquivos existentes)
+With `--overwrite`:
+- ✅ Main component is reinstalled
+- ✅ Dependencies are also reinstalled (overwriting existing files)
 
-## 🎨 Customização Segura
+## 🎨 Safe Customization
 
-Essa funcionalidade permite que você:
+This feature allows you to:
 
-### ✅ Customize Componentes com Segurança
+### ✅ Customize Components Safely
 
 ```typescript
 // src/components/pittaya/ui/button.tsx
-// Você customizou o button
+// You customized the button
 
 export function Button({ className, ...props }) {
   return (
     <button 
-      className={cn("minha-classe-custom", className)} 
+      className={cn("my-custom-class", className)} 
       {...props} 
     />
   )
 }
 ```
 
-Depois instalar outros componentes sem perder suas customizações:
+Then install other components without losing your customizations:
 
 ```bash
 npx pittaya add card modal dialog
-# button customizado não é sobrescrito! ✅
+# Customized button is not overwritten! ✅
 ```
 
-### ✅ Instale Componentes em Qualquer Ordem
+### ✅ Install Components in Any Order
 
-Não importa a ordem, componentes já instalados não são reinstalados:
+Order doesn't matter, already installed components are not reinstalled:
 
 ```bash
-# Instalar dependência primeiro
+# Install dependency first
 npx pittaya add button
 
-# Depois o componente que depende dela
+# Then the component that depends on it
 npx pittaya add orbit-images
-# button não é reinstalado ✅
+# button is not reinstalled ✅
 ```
 
-## 🔍 Detalhes Técnicos
+## 🔍 Technical Details
 
-### Verificação de Instalação
+### Installation Check
 
 ```typescript
 async function isComponentInstalled(
   name: string,
   config: IConfig
 ): Promise<boolean> {
-  // 1. Busca o componente no registry
+  // 1. Fetch component from registry
   const component = await getRegistryComponent(name);
   
-  // 2. Verifica cada arquivo do componente
+  // 2. Check each component file
   for (const file of component.files) {
     const filePath = resolveTargetPath(file.name, component.type, config);
     
-    // 3. Se algum arquivo não existe, retorna false
+    // 3. If any file doesn't exist, return false
     const exists = await fs.access(filePath);
     if (!exists) return false;
   }
   
-  // 4. Todos os arquivos existem
+  // 4. All files exist
   return true;
 }
 ```
 
-### Lógica de Skip
+### Skip Logic
 
 ```typescript
 async function addComponent(name: string, config: IConfig, options: IAddOptions) {
-  // Verificar se já está instalado
+  // Check if already installed
   const alreadyInstalled = await isComponentInstalled(name, config);
   
-  // Se já está instalado E não tem flag --overwrite, pular
+  // If already installed AND no --overwrite flag, skip
   if (alreadyInstalled && !options.overwrite) {
     console.log(`⏭️  ${name} already installed, skipping...`);
-    return; // ⬅️ Retorna sem instalar
+    return; // ⬅️ Return without installing
   }
   
-  // Continuar com instalação normal...
+  // Continue with normal installation...
 }
 ```
 
-### Verificação de Dependências
+### Dependency Verification
 
 ```typescript
-// Quando um componente tem registryDependencies
+// When a component has registryDependencies
 if (component.registryDependencies?.length > 0) {
   for (const dep of component.registryDependencies) {
-    // Cada dependência passa pela verificação de instalação
+    // Each dependency goes through installation check
     await addComponent(dep, config, { ...options, yes: true });
-    // ⬆️ Se 'dep' já está instalado, será pulado automaticamente
+    // ⬆️ If 'dep' is already installed, it will be automatically skipped
   }
 }
 ```
 
-## ⚙️ Opções de CLI
+## ⚙️ CLI Options
 
 ### `--overwrite`
 
-Força reinstalação de componentes existentes:
+Forces reinstallation of existing components:
 
 ```bash
 npx pittaya add button --overwrite
 ```
 
-### `--yes` ou `-y`
+### `--yes` or `-y`
 
-Não pergunta confirmações (usado internamente para dependências):
+Skips confirmations (used internally for dependencies):
 
 ```bash
 npx pittaya add button --yes
 ```
 
-### Combinando Flags
+### Combining Flags
 
 ```bash
 npx pittaya add orbit-images --overwrite --yes
 ```
 
-- Reinstala tudo sem perguntar
-- Sobrescreve arquivos existentes
+- Reinstalls everything without asking
+- Overwrites existing files
 
-## 📊 Cenários de Uso
+## 📊 Usage Scenarios
 
-| Cenário | Comportamento | Flag Necessária |
-|---------|---------------|-----------------|
-| Componente não existe | ✅ Instala | - |
-| Componente já existe | ⏭️ Pula | - |
-| Forçar reinstalação | ✅ Reinstala | `--overwrite` |
-| Dependência já existe | ⏭️ Pula | - |
-| Forçar todas deps | ✅ Reinstala | `--overwrite` |
+| Scenario | Behavior | Required Flag |
+|---------|----------|---------------|
+| Component doesn't exist | ✅ Installs | - |
+| Component already exists | ⏭️ Skips | - |
+| Force reinstallation | ✅ Reinstalls | `--overwrite` |
+| Dependency already exists | ⏭️ Skips | - |
+| Force all deps | ✅ Reinstalls | `--overwrite` |
 
-## 🎯 Benefícios
+## 🎯 Benefits
 
-1. **🛡️ Proteção de Customizações**
-   - Suas modificações não são perdidas
+1. **🛡️ Customization Protection**
+   - Your modifications aren't lost
 
-2. **⚡ Instalação Mais Rápida**
-   - Não reinstala dependências desnecessariamente
+2. **⚡ Faster Installation**
+   - Doesn't reinstall dependencies unnecessarily
 
-3. **🔄 Idempotência**
-   - Executar `npx pittaya add button` múltiplas vezes é seguro
+3. **🔄 Idempotency**
+   - Running `npx pittaya add button` multiple times is safe
 
-4. **📦 Gestão Inteligente de Dependências**
-   - Instala apenas o que é necessário
+4. **📦 Smart Dependency Management**
+   - Only installs what's needed
 
-5. **🎨 Workflow de Customização**
-   - Customize primeiro, instale outros componentes depois
+5. **🎨 Customization Workflow**
+   - Customize first, install other components later
 
-## 🚨 Casos Especiais
+## 🚨 Special Cases
 
-### Arquivo Parcialmente Deletado
+### Partially Deleted File
 
-Se você deletou **parte** dos arquivos de um componente:
+If you deleted **part** of a component's files:
 
 ```bash
-# button.tsx existe, mas button.test.tsx foi deletado
+# button.tsx exists, but button.test.tsx was deleted
 npx pittaya add button
-# ✅ Detecta que está incompleto e reinstala
+# ✅ Detects it's incomplete and reinstalls
 ```
 
-### Múltiplos Arquivos
+### Multiple Files
 
-Componentes com múltiplos arquivos são verificados completamente:
+Components with multiple files are fully verified:
 
 ```typescript
-// Componente com 3 arquivos
+// Component with 3 files
 {
   files: [
     { name: "button.tsx", content: "..." },
@@ -288,30 +288,30 @@ Componentes com múltiplos arquivos são verificados completamente:
   ]
 }
 
-// Todos devem existir para considerar "instalado"
+// All must exist to be considered "installed"
 ```
 
-## 📚 Logs e Feedback
+## 📚 Logs and Feedback
 
-### Componente Pulado
+### Skipped Component
 
 ```
 ⏭️  button already installed, skipping...
 ```
 
-### Componente Instalado
+### Installed Component
 
 ```
 ✓ button installed successfully!
 ```
 
-### Lista de Dependências
+### Dependency List
 
 ```
 📦 orbit-images requires: button, utils
 ```
 
-### Resumo Final
+### Final Summary
 
 ```
 ✅ Components added successfully!
@@ -319,35 +319,34 @@ Componentes com múltiplos arquivos são verificados completamente:
 
 ## 🔧 Troubleshooting
 
-### "Componente não é pulado mesmo existindo"
+### "Component not skipped even though it exists"
 
-**Causa:** Arquivo pode estar em local diferente do esperado
+**Cause:** File might be in a different location than expected
 
-**Solução:**
-1. Verifique `components.json` - aliases corretos?
-2. Verifique se o arquivo está em `src/components/pittaya/ui/`
-3. Verifique permissões do arquivo
+**Solution:**
+1. Check `components.json` - correct aliases?
+2. Check if file is in `src/components/pittaya/ui/`
+3. Check file permissions
 
-### "Quero forçar reinstalação mas não está funcionando"
+### "Want to force reinstallation but it's not working"
 
-**Solução:**
+**Solution:**
 ```bash
 npx pittaya add button --overwrite --yes
 ```
 
-### "Dependência não é instalada"
+### "Dependency not installed"
 
-**Causa:** Pode já estar instalada
+**Cause:** It might already be installed
 
-**Verificação:**
+**Verification:**
 ```bash
 ls -la src/components/pittaya/ui/button.tsx
-# Se existir, será pulada
+# If it exists, it will be skipped
 ```
 
 ---
 
-**Implementado em**: 2025-11-13  
-**Versão**: CLI 0.0.4+  
-**Status**: ✅ Funcional
-
+**Implemented**: 2025-11-13  
+**Version**: CLI 0.0.4+  
+**Status**: ✅ Functional

@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { Project } from "ts-morph";
 import { IRegistryComponent } from "../packages/cli/src/interfaces/IRegistryComponent";
 import { IIndexComponent } from "../packages/cli/src/interfaces/IIndexComponent";
 import { IComponentIndexItem } from "../packages/cli/src/interfaces/IComponentIndexItem";
@@ -238,11 +239,32 @@ async function buildRegistry() {
       if (extracted) dependencies.push(...extracted);
     }
 
-    const registryDepsFromContent = isLibrary ? [] : extractRegistryDependencies(content);
+    // Extract dependencies using AST analysis (detects absolute and relative imports)
+    const registryDepsFromContent = isLibrary
+      ? []
+      : extractRegistryDependenciesWithAST(content, componentName, isLibrary);
     const registryDeps = new Set<string>(registryDepsFromContent);
 
+    // Process internalDependencies declared manually
     if (internalDependencies && internalDependencies.length > 0) {
-      internalDependencies.forEach(dep => registryDeps.add(dep));
+      const autoDetected: string[] = [];
+      const manualOnly: string[] = [];
+
+      internalDependencies.forEach(dep => {
+        if (registryDepsFromContent.includes(dep)) {
+          autoDetected.push(dep);
+        } else {
+          manualOnly.push(dep);
+        }
+        registryDeps.add(dep);
+      });
+
+      if (autoDetected.length > 0) {
+        console.log(`     ℹ️  Auto-detected: ${autoDetected.join(", ")} (internalDependencies not needed)`);
+      }
+      if (manualOnly.length > 0) {
+        console.log(`     ✓ Manual override: ${manualOnly.join(", ")}`);
+      }
     }
 
     const component: IRegistryComponent = {
@@ -301,7 +323,111 @@ function extractNpmDependencies(content: string): string[] {
   return Array.from(deps).sort();
 }
 
-function extractRegistryDependencies(content: string): string[] {
+/**
+ * Extrai dependências internas usando análise AST do TypeScript
+ * Detecta imports absolutos (@/components/ui/*, @/lib/*) e relativos (./*, ../*)
+ */
+function extractRegistryDependenciesWithAST(
+  content: string,
+  componentName: string,
+  isLibrary: boolean
+): string[] {
+  const deps = new Set<string>();
+
+  try {
+    // Create a virtual ts-morph project for AST analysis
+    const project = new Project({
+      useInMemoryFileSystem: true,
+      compilerOptions: {
+        target: 99, // Latest
+        jsx: 2, // React
+      },
+    });
+
+    // Add the virtual file
+    const sourceFile = project.createSourceFile(
+      `${componentName}.tsx`,
+      content
+    );
+
+    const importDeclarations = sourceFile.getImportDeclarations();
+
+    for (const importDecl of importDeclarations) {
+      const moduleSpecifier = importDecl.getModuleSpecifierValue();
+
+      // 1. Detect absolute imports from @/lib/utils
+      if (moduleSpecifier === "@/lib/utils" || moduleSpecifier.startsWith("@/lib/utils/")) {
+        deps.add("utils");
+      }
+
+      // 2. Detect imports from @/components/ui/*
+      if (moduleSpecifier.startsWith("@/components/ui/")) {
+        const componentName = moduleSpecifier.replace("@/components/ui/", "");
+        if (componentName && !componentName.includes("/")) {
+          deps.add(componentName);
+        }
+      }
+
+      // 3. Detect relative imports (./* and ../*)
+      if (moduleSpecifier.startsWith("./") || moduleSpecifier.startsWith("../")) {
+        const resolvedName = extractComponentNameFromRelativePath(
+          moduleSpecifier,
+          componentName,
+          isLibrary
+        );
+        if (resolvedName) {
+          deps.add(resolvedName);
+        }
+      }
+    }
+  } catch (error) {
+    // Fallback to regex if AST fails
+    console.log(`   ⚠️  AST analysis failed for ${componentName}, using regex fallback`);
+    return extractRegistryDependenciesRegex(content);
+  }
+
+  return Array.from(deps).sort();
+}
+
+/**
+ * Extract component name from a relative path
+ * Exemplo: "./button" -> "button", "../ui/card" -> "card"
+ */
+function extractComponentNameFromRelativePath(
+  relativePath: string,
+  currentComponent: string,
+  isLibrary: boolean
+): string | null {
+  // Remove extensões (.tsx, .ts, .jsx, .js)
+  let cleanPath = relativePath.replace(/\.(tsx?|jsx?)$/, "");
+
+  // Remove ./ ou ../
+  cleanPath = cleanPath.replace(/^\.\.?\//, "");
+
+  // Se for um caminho complexo como "../ui/button", pega apenas o nome final
+  const parts = cleanPath.split("/");
+  const componentName = parts[parts.length - 1];
+
+  // Validação: verifica se é um nome de componente válido
+  // (não é index, types, constants, helpers, etc.)
+  const invalidNames = ["index", "types", "constants", "helpers", "utils", "hooks"];
+  if (invalidNames.includes(componentName)) {
+    return null;
+  }
+
+  // Se está em um componente de biblioteca e importa algo relativo,
+  // probably another component
+  if (isLibrary && componentName === "utils") {
+    return null; // importing utils from utils doesn't make sense (circular dependency)
+  }
+
+  return componentName;
+}
+
+/**
+ * Fallback: extraction using regex (old method)
+ */
+function extractRegistryDependenciesRegex(content: string): string[] {
   const deps = new Set<string>();
 
   if (content.includes("@/lib/utils") || content.includes('from "@/lib/utils"')) {

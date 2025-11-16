@@ -3,6 +3,8 @@ import { Command } from "commander";
 import { add } from "./commands/add.js";
 import { init } from "./commands/init.js";
 import { credits } from "./commands/credits.js";
+import { diff } from "./commands/diff.js";
+import { update } from "./commands/update.js";
 
 const program = new Command();
 
@@ -26,6 +28,22 @@ program
   .option("-a, --all", "Add all available components")
   .option("--add-missing-deps", "Automatically install missing dependencies")
   .action(add);
+
+program
+  .command("diff")
+  .description("Check for component updates")
+  .argument("[components...]", "Component names to check (leave empty for interactive mode)")
+  .option("-a, --all", "Check all installed components")
+  .action(diff);
+
+program
+  .command("update")
+  .description("Update components to latest version")
+  .argument("[components...]", "Component names to update (leave empty for interactive mode)")
+  .option("-a, --all", "Update all installed components")
+  .option("-y, --yes", "Skip confirmation prompts")
+  .option("-f, --force", "Force update even if no changes detected")
+  .action(update);
 
 program
   .command("credits")
