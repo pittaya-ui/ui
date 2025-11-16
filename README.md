@@ -150,6 +150,96 @@ npx pittaya@latest add button --add-missing-deps
 
 This will automatically install all missing dependencies without asking.
 
+### Check for component updates
+
+Check if your installed components have updates available in the registry:
+
+```bash
+npx pittaya@latest diff
+```
+
+This will show you an interactive list of installed components to check.
+
+#### Check specific components
+
+```bash
+npx pittaya@latest diff button orbit-images
+```
+
+#### Check all installed components
+
+```bash
+npx pittaya@latest diff --all
+```
+
+**Output:**
+
+```
+📝 Components with updates available (2):
+
+   • button
+     └─ button.tsx (modified)
+   • orbit-images
+     └─ orbit-images.tsx (modified)
+
+Run npx pittaya update <component> to update.
+
+✅ Components up to date (1):
+
+   • utils
+```
+
+### Update components
+
+Update your installed components to the latest version from the registry:
+
+```bash
+npx pittaya@latest update
+```
+
+This will show you an interactive list of installed components to update.
+
+#### Update specific components
+
+```bash
+npx pittaya@latest update button
+```
+
+#### Update all installed components
+
+```bash
+npx pittaya@latest update --all
+```
+
+#### Options
+
+- `-y, --yes` - Skip confirmation prompts
+- `-f, --force` - Force update even if no changes detected
+- `-a, --all` - Update all installed components
+
+**Examples:**
+
+```bash
+# Update all components without prompts
+npx pittaya@latest update --all --yes
+
+# Force update button (even if up to date)
+npx pittaya@latest update button --force
+```
+
+**Output:**
+
+```
+✅ Updated 2 component(s):
+
+   • button
+   • orbit-images
+
+⏭️  Skipped 1 component(s):
+
+   • utils (already up to date)
+```
+
 ## 🎨 Available Components
 
 ### Actions
@@ -482,8 +572,9 @@ User runs: npx pittaya add orbit-images
 ### Documentation
 
 - [Main Documentation](https://pittaya-ui.vercel.app)
-- [Internal Dependencies Guide](./INTERNAL_DEPENDENCIES.md)
-- [Skip Installed Components Guide](./SKIP_INSTALLED.md)
+- [Architecture Decision Records (ADRs)](./docs/adr/README.md) - Architectural decisions and rationale
+- [Internal Dependencies Guide](./docs/INTERNAL_DEPENDENCIES.md)
+- [Skip Installed Components Guide](./docs/SKIP_INSTALLED.md)
 
 ### Repository
 

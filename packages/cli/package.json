@@ -1,6 +1,6 @@
 {
   "name": "pittaya",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "CLI para adicionar componentes Pittaya UI ao seu projeto",
   "type": "module",
   "bin": {

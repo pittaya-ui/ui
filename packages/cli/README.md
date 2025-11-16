@@ -25,7 +25,7 @@ Use the `add` command to add components to your project.
 The `add` command adds a component to your project and installs all required dependencies.
 
 ```bash
-npx pittaya add [component]
+ npx pittaya add [component]
 ```
 
 ### Example
@@ -38,6 +38,52 @@ You can also run the command without any arguments to view a list of all availab
 
 ```bash
 npx pittaya add
+```
+
+## diff
+
+Use the `diff` command to check for component updates.
+
+The `diff` command compares your installed components with the registry and shows which ones have updates available.
+
+```bash
+npx pittaya diff [component]
+```
+
+### Example
+
+```bash
+# Check specific components
+npx pittaya diff button orbit-images
+
+# Check all installed components
+npx pittaya diff --all
+
+# Interactive mode
+npx pittaya diff
+```
+
+## update
+
+Use the `update` command to update components to the latest version.
+
+The `update` command updates your installed components to match the registry version.
+
+```bash
+npx pittaya update [component]
+```
+
+### Example
+
+```bash
+# Update specific component
+npx pittaya update button
+
+# Update all components
+npx pittaya update --all --yes
+
+# Force update (even if no changes detected)
+npx pittaya update button --force
 ```
 
 ## Documentation

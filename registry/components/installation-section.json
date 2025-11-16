@@ -7,6 +7,8 @@
     "@types/react-syntax-highlighter"
   ],
   "registryDependencies": [
+    "copy-button",
+    "tabs",
     "utils"
   ],
   "files": [
