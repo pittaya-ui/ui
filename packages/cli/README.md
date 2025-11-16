@@ -90,6 +90,13 @@ npx pittaya update button --force
 
 Visit https://pittaya-ui.vercel.app to view the documentation.
 
+### Additional Resources
+
+- [Roadmap](../../ROADMAP.md) - 🗺️ Future plans and completed features
+- [Changelog](../../CHANGELOG.md) - Version history and changes
+- [Contributing Guide](../../CONTRIBUTING.md) - How to contribute
+- [ADRs](../../docs/adr/README.md) - Architectural decisions
+
 ## Contributors
 
 <a href="https://github.com/pittaya-ui/ui-kit/graphs/contributors">
