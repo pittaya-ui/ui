@@ -16,10 +16,14 @@ npx pittaya@latest init
 - 🔗 **Dependency Management** - Intelligently installs component dependencies
 - 🛡️ **Preserves Customizations** - Won't overwrite your modified components
 - 📦 **Internal Dependencies** - Components can declare dependencies on other Pittaya components
+- 🤖 **AST-Based Detection** - 100% precision in detecting component dependencies using TypeScript Compiler API
 - ⚡ **Fast & Efficient** - Only installs what's needed
+- 🔄 **Update Management** - Check for updates and update components easily
 - 🎨 **Import Transformation** - Automatically adjusts imports to your project structure
 - 🌐 **GitHub Registry** - Components served via free CDN
 - 🔄 **Idempotent** - Safe to run multiple times
+
+> 📖 See [ROADMAP.md](./ROADMAP.md) for upcoming features and completed milestones
 
 ## 📖 Usage
 
@@ -572,6 +576,8 @@ User runs: npx pittaya add orbit-images
 ### Documentation
 
 - [Main Documentation](https://pittaya-ui.vercel.app)
+- [Roadmap](./ROADMAP.md) - 🗺️ Future plans and completed features
+- [Changelog](./CHANGELOG.md) - Version history and changes
 - [Architecture Decision Records (ADRs)](./docs/adr/README.md) - Architectural decisions and rationale
 - [Internal Dependencies Guide](./docs/INTERNAL_DEPENDENCIES.md)
 - [Skip Installed Components Guide](./docs/SKIP_INSTALLED.md)
@@ -584,7 +590,10 @@ User runs: npx pittaya add orbit-images
 
 ## 🤝 Contributing
 
-Contributions are welcome! See our [contribution guide](CONTRIBUTING.md).
+Contributions are welcome! See our:
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute
+- [Roadmap](ROADMAP.md) - Features we're working on
+- [ADRs](./docs/adr/README.md) - Architectural decisions
 
 ## 📝 License
 
