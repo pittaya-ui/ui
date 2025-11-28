@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs/promises";
 import { fetchRegistry, getRegistryComponent } from "../utils/registry.js";
 import { transformImports } from "../utils/transformer.js";
+import { isComponentInstalled, resolveTargetPath } from "../utils/component-checker.js";
 import { IConfig } from "../interfaces/IConfig";
 import { IRegistryComponent } from "../interfaces/IRegistryComponent";
 
@@ -134,32 +135,6 @@ export async function update(components: string[], options: UpdateOptions) {
   displayUpdateResults(results);
 }
 
-async function isComponentInstalled(
-  name: string,
-  config: IConfig
-): Promise<boolean> {
-  try {
-    const component: IRegistryComponent = await getRegistryComponent(name);
-    if (!component) return false;
-
-    for (const file of component.files) {
-      const targetPath = resolveTargetPath(file.name, component.type, config);
-      const filePath = path.join(process.cwd(), targetPath);
-
-      const exists = await fs
-        .access(filePath)
-        .then(() => true)
-        .catch(() => false);
-
-      if (!exists) return false;
-    }
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function hasComponentChanges(
   component: IRegistryComponent,
   config: IConfig
@@ -269,34 +244,5 @@ function displayUpdateResults(results: UpdateResult[]) {
   }
 
   console.log();
-}
-
-function resolveTargetPath(
-  fileName: string,
-  type: string,
-  config: IConfig
-): string {
-  if (type === "registry:ui") {
-    return path.join(
-      config.aliases.ui.replace("@/", "src/"),
-      fileName
-    );
-  }
-
-  if (type === "registry:lib") {
-    return path.join(
-      config.aliases.lib.replace("@/", "src/"),
-      fileName
-    );
-  }
-
-  if (type === "registry:hook") {
-    return path.join(
-      config.aliases.hooks.replace("@/", "src/"),
-      fileName
-    );
-  }
-
-  return fileName;
 }
 
