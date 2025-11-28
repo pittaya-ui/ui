@@ -86,6 +86,32 @@ npx pittaya update --all --yes
 npx pittaya update button --force
 ```
 
+## list
+
+Use the `list` command to view all available and installed components.
+
+The `list` command shows all components from the registry organized by category with installation status.
+
+```bash
+npx pittaya list
+```
+
+### Example
+
+```bash
+# List all components
+npx pittaya list
+
+# List only installed components
+npx pittaya list --installed
+
+# List only available components
+npx pittaya list --available
+
+# JSON output for programmatic use
+npx pittaya list --json
+```
+
 ## Documentation
 
 Visit https://pittaya-ui.vercel.app to view the documentation.

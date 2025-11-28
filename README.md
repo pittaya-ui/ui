@@ -19,6 +19,7 @@ npx pittaya@latest init
 - 🤖 **AST-Based Detection** - 100% precision in detecting component dependencies using TypeScript Compiler API
 - ⚡ **Fast & Efficient** - Only installs what's needed
 - 🔄 **Update Management** - Check for updates and update components easily
+- 📋 **Component Discovery** - List all available and installed components with detailed information
 - 🎨 **Import Transformation** - Automatically adjusts imports to your project structure
 - 🌐 **GitHub Registry** - Components served via free CDN
 - 🔄 **Idempotent** - Safe to run multiple times
@@ -243,6 +244,57 @@ npx pittaya@latest update button --force
 
    • utils (already up to date)
 ```
+
+### List components
+
+View all available and installed components:
+
+```bash
+npx pittaya@latest list
+```
+
+This will show all components from the registry, organized by category, with installation status.
+
+#### Show only installed components
+
+```bash
+npx pittaya@latest list --installed
+```
+
+#### Show only available components
+
+```bash
+npx pittaya@latest list --available
+```
+
+#### JSON output
+
+For programmatic use:
+
+```bash
+npx pittaya@latest list --json
+```
+
+**Output:**
+
+```
+📋 All Components
+
+Actions:
+  ✓ button - Displays a button or a component that looks like a button [1 deps]
+  ○ dropdown-menu - Displays a menu to the user [requires: button]
+
+Documentation:
+  ✓ installation-section - Displays installation instructions [2 deps]
+
+Total: 3 components (2 installed, 1 available)
+```
+
+**Legend:**
+- ✓ = Installed
+- ○ = Available (not installed)
+- [N deps] = Number of npm dependencies
+- [requires: X, Y] = Requires other Pittaya components
 
 ## 🎨 Available Components
 

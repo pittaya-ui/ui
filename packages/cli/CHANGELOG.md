@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7] - 2025-11-28
+
+### Added
+- ✨ `list` command to list available and installed components
+  - Shows all components from the registry with installation status
+  - `--installed` flag to show only installed components
+  - `--available` flag to show only available components
+  - `--json` flag for JSON output format
+  - Grouped by category with descriptions
+  - Shows dependency information (npm deps and internal deps)
+  - Visual indicators for installed vs available components
+
+### Changed
+- 🔧 Refactored `isComponentInstalled` and `resolveTargetPath` to shared utility functions
+  - Extracted to `utils/component-checker.ts` to avoid code duplication
+  - Now used by `add`, `diff`, `update`, and `list` commands
+  - Improved maintainability and consistency
+- 📚 Expanded README documentation with examples of `list` command
+
+## [0.0.6] - 2025-11-16
+
 ### Added
 - ✨ `diff` command to check for available component updates
   - Supports checking specific components: `npx pittaya diff button`
