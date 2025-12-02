@@ -19,6 +19,7 @@ npx pittaya@latest init
 - 🤖 **AST-Based Detection** - 100% precision in detecting component dependencies using TypeScript Compiler API
 - ⚡ **Fast & Efficient** - Only installs what's needed
 - 🔄 **Update Management** - Check for updates and update components easily
+- 📋 **Component Discovery** - List all available and installed components with detailed information
 - 🎨 **Import Transformation** - Automatically adjusts imports to your project structure
 - 🌐 **GitHub Registry** - Components served via free CDN
 - 🔄 **Idempotent** - Safe to run multiple times
@@ -243,6 +244,57 @@ npx pittaya@latest update button --force
 
    • utils (already up to date)
 ```
+
+### List components
+
+View all available and installed components:
+
+```bash
+npx pittaya@latest list
+```
+
+This will show all components from the registry, organized by category, with installation status.
+
+#### Show only installed components
+
+```bash
+npx pittaya@latest list --installed
+```
+
+#### Show only available components
+
+```bash
+npx pittaya@latest list --available
+```
+
+#### JSON output
+
+For programmatic use:
+
+```bash
+npx pittaya@latest list --json
+```
+
+**Output:**
+
+```
+📋 All Components
+
+Actions:
+  ✓ button - Displays a button or a component that looks like a button [1 deps]
+  ○ dropdown-menu - Displays a menu to the user [requires: button]
+
+Documentation:
+  ✓ installation-section - Displays installation instructions [2 deps]
+
+Total: 3 components (2 installed, 1 available)
+```
+
+**Legend:**
+- ✓ = Installed
+- ○ = Available (not installed)
+- [N deps] = Number of npm dependencies
+- [requires: X, Y] = Requires other Pittaya components
 
 ## 🎨 Available Components
 
@@ -493,6 +545,40 @@ git add packages/cli/package.json
 git commit -m "chore: bump cli to 0.0.2"
 git push
 ```
+
+### Validate Dependencies
+
+Before publishing or committing registry changes, you can manually validate that all components have correct NPM dependencies declared - although the registry makes it automatically:
+
+```bash
+# From cli/ directory
+npm run validate:deps
+```
+
+This will check all components and report any missing dependencies:
+
+```bash
+🔍 Validating dependencies in registry components...
+
+✅ button - 2 dependencies OK
+❌ installation-section
+   Declared: [react-syntax-highlighter]
+   Detected: [lucide-react, react-syntax-highlighter, sonner]
+   Missing:  [lucide-react, sonner]
+
+📊 Summary:
+   Total components: 6
+   With errors: 1
+   Valid: 5
+```
+
+**Fix missing dependencies:**
+
+1. Open the component JSON file (e.g., `registry/components/installation-section.json`)
+2. Add missing dependencies to the `dependencies` array
+3. Run `npm run validate:deps` again to confirm
+
+**See:** [DEPENDENCY_VALIDATION.md](./docs/DEPENDENCY_VALIDATION.md) for detailed documentation.
 
 ### Common Publishing Issues
 

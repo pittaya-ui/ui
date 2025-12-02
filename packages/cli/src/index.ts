@@ -5,6 +5,7 @@ import { init } from "./commands/init.js";
 import { credits } from "./commands/credits.js";
 import { diff } from "./commands/diff.js";
 import { update } from "./commands/update.js";
+import { list } from "./commands/list.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -53,6 +54,14 @@ program
   .option("-y, --yes", "Skip confirmation prompts")
   .option("-f, --force", "Force update even if no changes detected")
   .action(update);
+
+program
+  .command("list")
+  .description("List available and installed components")
+  .option("--installed", "Show only installed components")
+  .option("--available", "Show only available components")
+  .option("--json", "Output in JSON format")
+  .action(list);
 
 program
   .command("credits")

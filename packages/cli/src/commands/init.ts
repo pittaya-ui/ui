@@ -4,6 +4,7 @@ import prompts from "prompts";
 import path from "path";
 import fs from "fs/promises";
 import { execa } from "execa";
+import { getDefaultPaths } from "../utils/project-structure.js";
 
 interface InitOptions {
   yes?: boolean;
@@ -34,8 +35,16 @@ export async function init(options: InitOptions) {
     }
   }
 
+  const defaultPaths = await getDefaultPaths(cwd);
+
   const config = options.yes
-    ? getDefaultConfig()
+    ? {
+        style: "new-york",
+        tailwindCss: defaultPaths.globalsCss,
+        rsc: true,
+        componentsPath: defaultPaths.components,
+        utilsPath: defaultPaths.utils,
+      }
     : await prompts([
         {
           type: "select",
@@ -51,7 +60,7 @@ export async function init(options: InitOptions) {
           type: "text",
           name: "tailwindCss",
           message: "Where is your globals.css file?",
-          initial: "src/app/globals.css",
+          initial: defaultPaths.globalsCss,
         },
         {
           type: "confirm",
@@ -63,13 +72,13 @@ export async function init(options: InitOptions) {
           type: "text",
           name: "componentsPath",
           message: "Path for components?",
-          initial: "@/components",
+          initial: defaultPaths.components,
         },
         {
           type: "text",
           name: "utilsPath",
           message: "Path for utils?",
-          initial: "@/lib/utils",
+          initial: defaultPaths.utils,
         },
       ]);
 
@@ -135,16 +144,6 @@ export async function init(options: InitOptions) {
       `  ${chalk.bold("npx pittaya add --all")} - Add all components\n`
     )
   );
-}
-
-function getDefaultConfig() {
-  return {
-    style: "new-york",
-    tailwindCss: "src/app/globals.css",
-    rsc: true,
-    componentsPath: "@/components",
-    utilsPath: "@/lib/utils",
-  };
 }
 
 async function detectPackageManager(): Promise<string> {

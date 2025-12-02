@@ -5,7 +5,67 @@ All notable changes to the Pittaya CLI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.0.8] - 2025-12-02
+
+### Added
+- ✨ Automatic directory structure detection (`src/` vs root)
+  - CLI now automatically detects if the project uses `src/` directory or root-level structure
+  - `init` command suggests correct paths based on detected structure
+  - Components installed with correct imports regardless of structure
+  - Checks for common directories (`app/`, `components/`, `lib/`) inside `src/`
+  - Validates `tsconfig.json` configuration to confirm structure
+  - Zero manual configuration required
+  - See [SRC_DIRECTORY_DETECTION.md](../docs/SRC_DIRECTORY_DETECTION.md) for details
+- ✨ Dependency validation system for registry components
+  - New `validate:deps` script to check for missing NPM dependencies
+  - Automated detection of external package imports in component code
+  - Prevents installation errors caused by undeclared dependencies
+  - Supports scoped packages (`@radix-ui/react-slot`) and sub-paths
+  - Clear error reporting showing declared vs detected vs missing dependencies
+  - CI/CD integration ready
+  - See [DEPENDENCY_VALIDATION.md](../docs/DEPENDENCY_VALIDATION.md) for details
+
+### Changed
+- 🔧 `resolveTargetPath()` function migrated to async to support dynamic detection
+  - Removes hardcoded `.replace("@/", "src/")` that always assumed `src/` structure
+  - Now uses `resolveAliasPath()` to resolve paths dynamically
+  - Affects `add`, `diff`, `update`, and `list` commands
+- 🔧 `init` command now uses `getDefaultPaths()` to suggest intelligent defaults
+  - Defaults automatically adjusted: `src/app/globals.css` vs `app/globals.css`
+  - Improves user experience when initializing projects
+- 🔧 `build:registry` script now automatically validates dependencies after building
+  - Auto-detection now always runs (merges with manual declarations)
+  - Previously manual declarations would override auto-detection
+  - Validation runs automatically, warns about missing dependencies
+
+### Fixed
+- 🐛 Fixed bug where components were installed in `src/` even in projects with root-level structure
+- 🐛 Fixed incorrect imports (`@/lib/utils` → `src/lib/utils`) in projects without `src/` directory
+- 🐛 Fixed missing NPM dependencies in registry components
+  - `button`: Added `class-variance-authority`
+  - `installation-section`: Added `lucide-react` and `sonner`
+  - All components now properly declare their dependencies
+
+## [0.0.7] - 2025-11-28
+
+### Added
+- ✨ `list` command to list available and installed components
+  - Shows all components from the registry with installation status
+  - `--installed` flag to show only installed components
+  - `--available` flag to show only available components
+  - `--json` flag for JSON output format
+  - Grouped by category with descriptions
+  - Shows dependency information (npm deps and internal deps)
+  - Visual indicators for installed vs available components
+
+### Changed
+- 🔧 Refactored `isComponentInstalled` and `resolveTargetPath` to shared utility functions
+  - Extracted to `utils/component-checker.ts` to avoid code duplication
+  - Now used by `add`, `diff`, `update`, and `list` commands
+  - Improved maintainability and consistency
+- 📚 Expanded README documentation with examples of `list` command
+
+## [0.0.6] - 2025-11-16
 
 ### Added
 - ✨ `diff` command to check for available component updates

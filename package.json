@@ -17,6 +17,8 @@
   "scripts": {
     "build": "npm run build --workspace=packages/cli",
     "build:registry": "tsx --env-file=.env scripts/build-registry.ts",
+    "validate:deps": "tsx scripts/validate-dependencies.ts",
+    "install:hooks": "bash scripts/install-hooks.sh",
     "dev": "npm run dev --workspace=packages/cli",
     "release": "npm run build && npm run pub:release --workspace=packages/cli"
   },
