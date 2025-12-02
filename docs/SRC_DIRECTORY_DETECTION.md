@@ -163,6 +163,33 @@ npx pittaya add button
 # Imports should be correct based on structure
 ```
 
+## Troubleshooting
+
+### Debug Structure Detection
+
+If components aren't being installed in the correct location:
+
+```bash
+# Check project structure detection
+npx pittaya debug
+
+# Debug specific component
+npx pittaya debug --component button
+```
+
+This will show:
+- Detected structure (`src/` vs root)
+- Resolved alias paths
+- Expected vs actual file locations
+
+### Component Not Found
+
+If a component shows as "not installed" but exists in your project:
+
+1. **Check file name:** Component files use kebab-case (e.g., `installation-section.tsx`, not `InstallationSection.tsx`)
+2. **Check location:** Files should be in the resolved UI path (use `debug` command to see expected path)
+3. **Verify structure:** Ensure your project structure matches what CLI detected
+
 ## Technical Notes
 
 - Detection happens at **runtime**, not cached

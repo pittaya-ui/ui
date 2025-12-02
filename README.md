@@ -296,6 +296,26 @@ Total: 3 components (2 installed, 1 available)
 - [N deps] = Number of npm dependencies
 - [requires: X, Y] = Requires other Pittaya components
 
+### Debug component issues
+
+Diagnose why a component is not being detected as installed:
+
+```bash
+npx pittaya@latest debug --component installation-section
+```
+
+This will show:
+- Project structure (src/ vs root)
+- Resolved alias paths
+- Expected file locations
+- Actual file existence
+- Similar files found (helps identify naming issues)
+
+**Common issues it helps solve:**
+- File name mismatches (e.g., `InstallationSection.tsx` vs `installation-section.tsx`)
+- Wrong directory structure
+- Incorrect `components.json` configuration
+
 ## 🎨 Available Components
 
 ### Actions

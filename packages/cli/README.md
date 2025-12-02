@@ -112,6 +112,40 @@ npx pittaya list --available
 npx pittaya list --json
 ```
 
+## debug
+
+Use the `debug` command to diagnose component installation issues.
+
+The `debug` command helps identify why a component is not being detected as installed, showing expected file paths and actual file locations.
+
+```bash
+npx pittaya debug --component [component]
+```
+
+### Example
+
+```bash
+# Debug general project setup
+npx pittaya debug
+
+# Debug specific component
+npx pittaya debug --component installation-section
+```
+
+**What it shows:**
+- Project structure detection (src/ vs root)
+- Resolved alias paths
+- Expected file locations
+- Actual file existence
+- Installation status
+- Similar files found (helps identify naming mismatches)
+
+**Common issues it helps diagnose:**
+- File name mismatches (e.g., `InstallationSection.tsx` vs `installation-section.tsx`)
+- Wrong directory structure (e.g., missing `src/` folder)
+- Incorrect `components.json` aliases
+- Components installed in unexpected locations
+
 ## Documentation
 
 Visit https://pittaya-ui.vercel.app to view the documentation.
