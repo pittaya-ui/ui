@@ -140,7 +140,7 @@ async function hasComponentChanges(
   config: IConfig
 ): Promise<boolean> {
   for (const file of component.files) {
-    const targetPath = resolveTargetPath(file.name, component.type, config);
+    const targetPath = await resolveTargetPath(file.name, component.type, config);
     const filePath = path.join(process.cwd(), targetPath);
 
     try {
@@ -204,7 +204,7 @@ async function updateComponent(
 
     // Update files
     for (const file of component.files) {
-      const targetPath = resolveTargetPath(file.name, component.type, config);
+      const targetPath = await resolveTargetPath(file.name, component.type, config);
       const filePath = path.join(process.cwd(), targetPath);
 
       await fs.mkdir(path.dirname(filePath), { recursive: true });

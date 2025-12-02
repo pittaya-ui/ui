@@ -228,16 +228,23 @@ async function buildRegistry() {
     const fileExtension = (hasReactImport || hasJSX || isUIComponent) ? ".tsx" : ".ts";
     const fileName = `${componentName}${fileExtension}`;
 
-    const dependencies: string[] = [];
+    // Always auto-detect dependencies from code
+    const dependencies = new Set<string>();
 
-    if (indexDependencies && indexDependencies.length > 0) {
-      dependencies.push(...indexDependencies);
-    } else if (componentName === "utils") {
-      dependencies.push("clsx", "tailwind-merge");
+    if (componentName === "utils") {
+      dependencies.add("clsx");
+      dependencies.add("tailwind-merge");
     } else if (!isLibrary) {
       const extracted = extractNpmDependencies(content);
-      if (extracted) dependencies.push(...extracted);
+      extracted.forEach(dep => dependencies.add(dep));
     }
+
+    // Merge with manual declarations (for edge cases)
+    if (indexDependencies && indexDependencies.length > 0) {
+      indexDependencies.forEach(dep => dependencies.add(dep));
+    }
+
+    const finalDependencies = Array.from(dependencies).sort();
 
     // Extract dependencies using AST analysis (detects absolute and relative imports)
     const registryDepsFromContent = isLibrary
@@ -271,7 +278,7 @@ async function buildRegistry() {
       name: componentName,
       type: isLibrary ? "registry:lib" : "registry:ui",
       description,
-      dependencies: dependencies.length > 0 ? dependencies : undefined,
+      dependencies: finalDependencies.length > 0 ? finalDependencies : undefined,
       registryDependencies: registryDeps.size > 0 ? Array.from(registryDeps).sort() : undefined,
       files: [
         {
@@ -302,9 +309,48 @@ async function buildRegistry() {
 
   console.log(`\n✅ Registry generated with ${index.components.length} components!`);
   console.log(`📁 Location: ${REGISTRY_DIR}`);
+
+  // Validate dependencies after building
+  console.log(`\n🔍 Validating dependencies...`);
+  await validateDependencies();
+
   console.log(
     `\n💡 Next step: Commit and push to GitHub to make it available via CDN\n`
   );
+}
+
+async function validateDependencies() {
+  try {
+    const files = await fs.readdir(REGISTRY_COMPONENTS_DIR);
+    const jsonFiles = files.filter(f => f.endsWith(".json"));
+
+    let hasErrors = false;
+
+    for (const file of jsonFiles) {
+      const filePath = path.join(REGISTRY_COMPONENTS_DIR, file);
+      const content = await fs.readFile(filePath, "utf-8");
+      const component: IRegistryComponent = JSON.parse(content);
+
+      const codeContent = component.files[0].content;
+      const detectedDeps = extractNpmDependencies(codeContent);
+      const declaredDeps = component.dependencies || [];
+      const missing = detectedDeps.filter(dep => !declaredDeps.includes(dep));
+
+      if (missing.length > 0) {
+        hasErrors = true;
+        console.log(`   ⚠️  ${component.name}: missing [${missing.join(", ")}]`);
+      }
+    }
+
+    if (hasErrors) {
+      console.log(`   ❌ Some components have missing dependencies!`);
+      console.log(`   💡 Run: npm run validate:deps for details`);
+    } else {
+      console.log(`   ✅ All dependencies are correctly declared`);
+    }
+  } catch (error) {
+    console.log(`   ⚠️  Validation skipped (error: ${error})`);
+  }
 }
 
 function extractNpmDependencies(content: string): string[] {

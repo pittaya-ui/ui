@@ -1,0 +1,28 @@
+name: Validate Registry
+
+on:
+  pull_request:
+    paths:
+      - 'registry/components/**'
+      - 'scripts/build-registry.ts'
+      - 'scripts/validate-dependencies.ts'
+  push:
+    branches: [main]
+    paths:
+      - 'registry/components/**'
+
+jobs:
+  validate-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate component dependencies
+        run: npm run validate:deps

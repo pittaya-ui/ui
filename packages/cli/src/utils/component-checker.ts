@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import { getRegistryComponent } from "./registry.js";
 import { IConfig } from "../interfaces/IConfig.js";
 import { IRegistryComponent } from "../interfaces/IRegistryComponent.js";
+import { resolveAliasPath } from "./project-structure.js";
 
 /**
  * Check if a component is installed in the project
@@ -43,30 +44,24 @@ export async function isComponentInstalled(
  * @param config - The project configuration
  * @returns The resolved file path
  */
-export function resolveTargetPath(
+export async function resolveTargetPath(
   fileName: string,
   type: string,
   config: IConfig
-): string {
+): Promise<string> {
   if (type === "registry:ui") {
-    return path.join(
-      config.aliases.ui.replace("@/", "src/"),
-      fileName
-    );
+    const resolvedPath = await resolveAliasPath(config.aliases.ui);
+    return path.join(resolvedPath, fileName);
   }
 
   if (type === "registry:lib") {
-    return path.join(
-      config.aliases.lib.replace("@/", "src/"),
-      fileName
-    );
+    const resolvedPath = await resolveAliasPath(config.aliases.lib);
+    return path.join(resolvedPath, fileName);
   }
 
   if (type === "registry:hook") {
-    return path.join(
-      config.aliases.hooks.replace("@/", "src/"),
-      fileName
-    );
+    const resolvedPath = await resolveAliasPath(config.aliases.hooks);
+    return path.join(resolvedPath, fileName);
   }
 
   return fileName;

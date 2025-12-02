@@ -1,7 +1,7 @@
 {
   "name": "pittaya",
-  "version": "0.0.7",
-  "description": "CLI para adicionar componentes Pittaya UI ao seu projeto",
+  "version": "0.0.8",
+  "description": "Pittaya UI CLI",
   "type": "module",
   "bin": {
     "pittaya": "./dist/index.js"

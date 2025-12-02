@@ -546,6 +546,40 @@ git commit -m "chore: bump cli to 0.0.2"
 git push
 ```
 
+### Validate Dependencies
+
+Before publishing or committing registry changes, you can manually validate that all components have correct NPM dependencies declared - although the registry makes it automatically:
+
+```bash
+# From cli/ directory
+npm run validate:deps
+```
+
+This will check all components and report any missing dependencies:
+
+```bash
+🔍 Validating dependencies in registry components...
+
+✅ button - 2 dependencies OK
+❌ installation-section
+   Declared: [react-syntax-highlighter]
+   Detected: [lucide-react, react-syntax-highlighter, sonner]
+   Missing:  [lucide-react, sonner]
+
+📊 Summary:
+   Total components: 6
+   With errors: 1
+   Valid: 5
+```
+
+**Fix missing dependencies:**
+
+1. Open the component JSON file (e.g., `registry/components/installation-section.json`)
+2. Add missing dependencies to the `dependencies` array
+3. Run `npm run validate:deps` again to confirm
+
+**See:** [DEPENDENCY_VALIDATION.md](./docs/DEPENDENCY_VALIDATION.md) for detailed documentation.
+
 ### Common Publishing Issues
 
 **Error: "Package name already taken"**

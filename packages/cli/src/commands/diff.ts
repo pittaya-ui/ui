@@ -149,7 +149,7 @@ async function checkComponentDiff(
     let hasChanges = false;
 
     for (const file of component.files) {
-      const targetPath = resolveTargetPath(file.name, component.type, config);
+      const targetPath = await resolveTargetPath(file.name, component.type, config);
       const filePath = path.join(process.cwd(), targetPath);
 
       try {
