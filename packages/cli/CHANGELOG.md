@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Clear error reporting showing declared vs detected vs missing dependencies
   - CI/CD integration ready
   - See [DEPENDENCY_VALIDATION.md](../docs/DEPENDENCY_VALIDATION.md) for details
+- ✨ `debug` command to diagnose component installation issues
+  - Shows project structure detection and resolved paths
+  - Displays expected vs actual file locations
+  - Identifies file name mismatches (PascalCase vs kebab-case)
+  - Lists similar files in directories to help find renamed components
+  - Helps troubleshoot why components aren't detected as installed
+  - Usage: `npx pittaya debug --component <name>`
 
 ### Changed
 - 🔧 `resolveTargetPath()` function migrated to async to support dynamic detection

@@ -303,6 +303,21 @@ import type { Highlighter } from "shiki"
 
 ## Troubleshooting
 
+### Component Not Detected as Installed
+
+If `update` or `diff` commands show a component as "not installed" but you believe it's there:
+
+```bash
+# Use debug command to investigate
+npx pittaya debug --component installation-section
+```
+
+This will show:
+- Expected file paths
+- Actual file existence
+- File name mismatches (e.g., `InstallationSection.tsx` vs `installation-section.tsx`)
+- Similar files in the directory
+
 ### False Positives
 
 If the validator reports a missing dependency that shouldn't be required:
