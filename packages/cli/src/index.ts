@@ -6,6 +6,7 @@ import { credits } from "./commands/credits.js";
 import { diff } from "./commands/diff.js";
 import { update } from "./commands/update.js";
 import { list } from "./commands/list.js";
+import { debug } from "./commands/debug.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -67,6 +68,12 @@ program
   .command("credits")
   .description("Show Pittaya UI creators")
   .action(credits);
+
+program
+  .command("debug")
+  .description("Debug component installation issues")
+  .option("-c, --component <name>", "Component name to debug")
+  .action(debug);
 
 program.parse();
 
