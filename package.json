@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspace=packages/cli",
-    "build:registry": "tsx --env-file=.env scripts/build-registry.ts",
+    "build:registry": "tsx --env-file=.env scripts/build-registry.ts  --ui-branch main",
+    "build:registry:dev": "tsx --env-file=.env scripts/build-registry.ts --ui-branch develop",
     "validate:deps": "tsx scripts/validate-dependencies.ts",
     "install:hooks": "bash scripts/install-hooks.sh",
     "dev": "npm run dev --workspace=packages/cli",

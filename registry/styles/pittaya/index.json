@@ -21,6 +21,15 @@
       "description": "Displays a badge with an icon and a title."
     },
     {
+      "name": "badge",
+      "type": "registry:ui",
+      "files": [
+        "badge"
+      ],
+      "category": "Components",
+      "description": "Displays a badge for status, labels, or metadata."
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "files": [
@@ -48,6 +57,15 @@
       "description": "Displays a carousel of images or content."
     },
     {
+      "name": "command",
+      "type": "registry:ui",
+      "files": [
+        "command"
+      ],
+      "category": "Navigation",
+      "description": "A fast command menu and search interface."
+    },
+    {
       "name": "copy-button",
       "type": "registry:ui",
       "files": [
@@ -66,6 +84,15 @@
       "description": "Displays installation instructions with code snippets."
     },
     {
+      "name": "multi-select",
+      "type": "registry:ui",
+      "files": [
+        "multi-select"
+      ],
+      "category": "Forms",
+      "description": "A searchable multi-select component with badges for displaying selected items."
+    },
+    {
       "name": "orbit-images",
       "type": "registry:ui",
       "files": [
@@ -73,6 +100,15 @@
       ],
       "category": "Components",
       "description": "Displays a set of images in an orbiting motion."
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "files": [
+        "popover"
+      ],
+      "category": "Overlays",
+      "description": "A floating content container positioned relative to a trigger."
     },
     {
       "name": "tabs",
