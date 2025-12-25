@@ -1,7 +1,16 @@
 {
-  "$schema": "./schema.json",
+  "$schema": "../../schema.json",
   "version": "0.0.1",
   "components": [
+    {
+      "name": "style",
+      "type": "registry:style",
+      "files": [
+        "style"
+      ],
+      "category": "Style",
+      "description": "Base style (pittaya)"
+    },
     {
       "name": "announcement-badge",
       "type": "registry:ui",

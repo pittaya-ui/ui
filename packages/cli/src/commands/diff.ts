@@ -6,8 +6,9 @@ import fs from "fs/promises";
 import { fetchRegistry, getRegistryComponent } from "../utils/registry.js";
 import { transformImports } from "../utils/transformer.js";
 import { isComponentInstalled, resolveTargetPath } from "../utils/component-checker.js";
-import { IConfig } from "../interfaces/IConfig";
-import { IRegistryComponent } from "../interfaces/IRegistryComponent";
+import { applyPittayaProjectConfig, loadProjectConfig } from "../utils/project-config.js";
+import { IConfig } from "../interfaces/IConfig.js";
+import { IRegistryComponent } from "../interfaces/IRegistryComponent.js";
 
 interface DiffOptions {
   all?: boolean;
@@ -29,12 +30,12 @@ interface FileDiff {
 
 export async function diff(components: string[], options: DiffOptions) {
   const cwd = process.cwd();
-  const componentsJsonPath = path.join(cwd, "components.json");
 
   let config: IConfig;
   try {
-    const configContent = await fs.readFile(componentsJsonPath, "utf-8");
-    config = JSON.parse(configContent);
+    const loaded = await loadProjectConfig(cwd);
+    config = loaded.config;
+    applyPittayaProjectConfig(loaded.pittaya);
   } catch (error) {
     console.log(chalk.red("\n❌ components.json not found.\n"));
     console.log(
@@ -46,7 +47,7 @@ export async function diff(components: string[], options: DiffOptions) {
   const spinner = ora("Fetching registry...").start();
   let registry;
   try {
-    registry = await fetchRegistry();
+    registry = await fetchRegistry(config);
     spinner.succeed("Registry loaded!");
   } catch (error) {
     spinner.fail("Error loading registry");
@@ -133,7 +134,7 @@ async function checkComponentDiff(
   config: IConfig
 ): Promise<ComponentDiff | null> {
   try {
-    const component: IRegistryComponent = await getRegistryComponent(name);
+    const component: IRegistryComponent = await getRegistryComponent(name, config);
     if (!component) {
       console.log(chalk.red(`   ❌ Component "${name}" not found in registry.`));
       return null;

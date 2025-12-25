@@ -1,10 +1,11 @@
 import chalk from "chalk";
 import path from "path";
 import fs from "fs/promises";
-import { IConfig } from "../interfaces/IConfig";
+import { IConfig } from "../interfaces/IConfig.js";
 import { getRegistryComponent } from "../utils/registry.js";
 import { resolveTargetPath, isComponentInstalled } from "../utils/component-checker.js";
 import { hasSrcDirectory, resolveAliasPath } from "../utils/project-structure.js";
+import { applyPittayaProjectConfig, loadProjectConfig } from "../utils/project-config.js";
 
 interface DebugOptions {
   component?: string;
@@ -12,46 +13,41 @@ interface DebugOptions {
 
 export async function debug(options: DebugOptions) {
   const cwd = process.cwd();
-  const componentsJsonPath = path.join(cwd, "components.json");
 
   console.log(chalk.bold("\n🔍 Pittaya UI Debug Information\n"));
   console.log(chalk.dim(`Working directory: ${cwd}\n`));
 
-  // Check components.json
   let config: IConfig;
   try {
-    const configContent = await fs.readFile(componentsJsonPath, "utf-8");
-    config = JSON.parse(configContent);
+    const loaded = await loadProjectConfig(cwd);
+    config = loaded.config;
+    applyPittayaProjectConfig(loaded.pittaya);
     console.log(chalk.green("✅ components.json found"));
-    console.log(chalk.dim(`   Path: ${componentsJsonPath}`));
+    console.log(chalk.dim(`   Path: ${path.join(cwd, "components.json")}`));
   } catch (error) {
     console.log(chalk.red("❌ components.json not found\n"));
     return;
   }
 
-  // Check project structure
   const usesSrc = await hasSrcDirectory(cwd);
   console.log(chalk.green(`✅ Project structure: ${usesSrc ? "src/" : "root"}`));
 
-  // Display aliases
   console.log(chalk.bold("\n📋 Configured Aliases:"));
   console.log(chalk.dim(`   components: ${config.aliases.components}`));
   console.log(chalk.dim(`   utils: ${config.aliases.utils}`));
   console.log(chalk.dim(`   ui: ${config.aliases.ui}`));
 
-  // Resolve aliases to actual paths
   const resolvedUi = await resolveAliasPath(config.aliases.ui, cwd);
   const resolvedLib = await resolveAliasPath(config.aliases.lib || "@/lib", cwd);
   console.log(chalk.bold("\n📂 Resolved Paths:"));
   console.log(chalk.dim(`   UI components: ${resolvedUi}`));
   console.log(chalk.dim(`   Libraries: ${resolvedLib}`));
 
-  // Check if component specified
   if (options.component) {
     console.log(chalk.bold(`\n🔍 Debugging component: ${options.component}\n`));
 
     try {
-      const component = await getRegistryComponent(options.component);
+      const component = await getRegistryComponent(options.component, config);
 
       if (!component) {
         console.log(chalk.red(`❌ Component not found in registry\n`));
@@ -79,7 +75,6 @@ export async function debug(options: DebugOptions) {
         console.log(chalk.dim(`      Status: ${statusText}`));
 
         if (!exists) {
-          // Check if file exists with different name
           const dir = path.dirname(fullPath);
           try {
             const dirExists = await fs.access(dir).then(() => true).catch(() => false);
@@ -100,7 +95,7 @@ export async function debug(options: DebugOptions) {
               console.log(chalk.red(`      ⚠️  Directory doesn't exist: ${dir}`));
             }
           } catch (err) {
-            // Ignore
+            // Ignore without envolve feeling 
           }
         }
       }

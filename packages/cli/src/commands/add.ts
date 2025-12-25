@@ -8,18 +8,22 @@ import { fetchRegistry, getRegistryComponent } from "../utils/registry.js";
 import { transformImports } from "../utils/transformer.js";
 import { detectPackageManager, checkMissingDependencies } from "../utils/package-manager.js";
 import { isComponentInstalled, resolveTargetPath } from "../utils/component-checker.js";
+import { applyPittayaProjectConfig, loadProjectConfig } from "../utils/project-config.js";
+import { confirm } from "../utils/confirm.js";
 import { IAddOptions } from "../interfaces/IAddOptions";
 import { IConfig } from "../interfaces/IConfig";
 import { IRegistryComponent } from "../interfaces/IRegistryComponent";
 
 export async function add(components: string[], options: IAddOptions) {
   const cwd = process.cwd();
-  const componentsJsonPath = path.join(cwd, "components.json");
 
   let config: IConfig;
+  let pittayaConfig: any;
   try {
-    const configContent = await fs.readFile(componentsJsonPath, "utf-8");
-    config = JSON.parse(configContent);
+    const loaded = await loadProjectConfig(cwd);
+    config = loaded.config;
+    pittayaConfig = loaded.pittaya;
+    applyPittayaProjectConfig(pittayaConfig);
   } catch (error) {
     console.log(chalk.red("\n❌ components.json not found.\n"));
     console.log(
@@ -28,10 +32,15 @@ export async function add(components: string[], options: IAddOptions) {
     return;
   }
 
+  const resolvedOptions: IAddOptions = {
+    ...options,
+    addMissingDeps: options.addMissingDeps ?? pittayaConfig?.install?.autoInstallDeps ?? false,
+  };
+
   const spinner = ora("Fetching available components...").start();
   let registry;
   try {
-    registry = await fetchRegistry();
+    registry = await fetchRegistry(config);
     spinner.succeed("Registry loaded!");
   } catch (error) {
     spinner.fail("Error loading registry");
@@ -74,7 +83,7 @@ export async function add(components: string[], options: IAddOptions) {
   );
 
   for (const componentName of components) {
-    await addComponent(componentName, config, options);
+    await addComponent(componentName, config, resolvedOptions);
   }
 
   console.log(chalk.green("\n✅ Components added successfully!\n"));
@@ -94,7 +103,7 @@ async function addComponent(
   const spinner = ora(`Installing ${chalk.bold(name)}...`).start();
 
   try {
-    const component: IRegistryComponent = await getRegistryComponent(name);
+    const component: IRegistryComponent = await getRegistryComponent(name, config);
 
     if (!component) {
       spinner.fail(`Component "${name}" not found in registry.`);
@@ -119,12 +128,10 @@ async function addComponent(
         if (options.addMissingDeps) {
           console.log(chalk.dim("Installing dependencies automatically...\n"));
         } else {
-          const { install } = await prompts({
-            type: "confirm",
-            name: "install",
-            message: "Do you want to install the dependencies now?",
-            initial: true,
-          });
+          const install = await confirm(
+            "Do you want to install the dependencies now?",
+            true
+          );
 
           if (!install) {
             console.log(chalk.yellow("\n⚠️  Component not installed. Install the dependencies manually and try again.\n"));
@@ -172,12 +179,10 @@ async function addComponent(
 
       if (exists && !options.overwrite && !options.yes) {
         spinner.stop();
-        const { overwrite } = await prompts({
-          type: "confirm",
-          name: "overwrite",
-          message: `${targetPath} already exists. Overwrite?`,
-          initial: false,
-        });
+        const overwrite = await confirm(
+          `${targetPath} already exists. Overwrite?`,
+          false
+        );
 
         if (!overwrite) {
           spinner.warn(`Skipping ${targetPath}`);

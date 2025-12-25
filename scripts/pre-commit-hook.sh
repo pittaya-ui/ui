@@ -5,15 +5,15 @@
 
 echo "🔍 Running pre-commit validation..."
 
-# Check if any registry component files were modified
-CHANGED_COMPONENTS=$(git diff --cached --name-only | grep "^registry/components/.*\.json$")
+# Check if any registry style files were modified
+CHANGED_COMPONENTS=$(git diff --cached --name-only | grep "^registry/styles/.*\.json$")
 
 if [ -z "$CHANGED_COMPONENTS" ]; then
-  echo "✅ No registry components modified, skipping validation"
+  echo "✅ No registry styles modified, skipping validation"
   exit 0
 fi
 
-echo "📦 Registry components modified:"
+echo "📦 Registry styles modified:"
 echo "$CHANGED_COMPONENTS" | sed 's/^/   - /'
 echo ""
 

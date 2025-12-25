@@ -1,0 +1,96 @@
+{
+  "$schema": "../../schema.json",
+  "version": "0.0.1",
+  "components": [
+    {
+      "name": "style",
+      "type": "registry:style",
+      "files": [
+        "style"
+      ],
+      "category": "Style",
+      "description": "Base style (default)"
+    },
+    {
+      "name": "announcement-badge",
+      "type": "registry:ui",
+      "files": [
+        "announcement-badge"
+      ],
+      "category": "Components",
+      "description": "Displays a badge with an icon and a title."
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "files": [
+        "button"
+      ],
+      "category": "Actions",
+      "description": "Displays a button or a component that looks like a button."
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "files": [
+        "card"
+      ],
+      "category": "Components",
+      "description": "Displays a card with a title, description, content and footer."
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "files": [
+        "carousel"
+      ],
+      "category": "Components",
+      "description": "Displays a carousel of images or content."
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "files": [
+        "copy-button"
+      ],
+      "category": "Actions",
+      "description": "Displays a copy button that copies the text to the clipboard when clicked."
+    },
+    {
+      "name": "installation-section",
+      "type": "registry:ui",
+      "files": [
+        "installation-section"
+      ],
+      "category": "Documentation",
+      "description": "Displays installation instructions with code snippets."
+    },
+    {
+      "name": "orbit-images",
+      "type": "registry:ui",
+      "files": [
+        "orbit-images"
+      ],
+      "category": "Components",
+      "description": "Displays a set of images in an orbiting motion."
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "files": [
+        "tabs"
+      ],
+      "category": "Navigation",
+      "description": "A set of layered sections of content—known as tab panels—that are displayed one at a time."
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "files": [
+        "utils"
+      ],
+      "category": "Library",
+      "description": "Utility functions for className management (includes cn function)"
+    }
+  ]
+}

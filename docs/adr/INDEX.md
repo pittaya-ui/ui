@@ -1,19 +1,19 @@
-# 📚 Índice de Architecture Decision Records
+# Índice de Architecture Decision Records
 
-> Última atualização: 2025-11-16
+> Última atualização: 2025-12-17
 
-## 📊 Visão Geral
+## Visão Geral
 
-Total de ADRs: **2**
+Total de ADRs: **3**
 
 | Status | Quantidade |
 |--------|-----------|
-| ✅ Accepted | 2 |
+| ✅ Accepted | 3 |
 | 🟡 Proposed | 0 |
 | ⚠️ Deprecated | 0 |
 | 🔄 Superseded | 0 |
 
-## 🗂️ ADRs por Categoria
+## ADRs por Categoria
 
 ### Meta / Processo
 
@@ -26,17 +26,20 @@ Total de ADRs: **2**
 | # | Título | Status | Data | Impacto |
 |---|--------|--------|------|---------|
 | [0002](0002-ast-para-deteccao-de-dependencias.md) | Análise AST para Detecção de Dependências | ✅ Accepted | 2025-11-16 | 🔴 Alto |
+| [0003](0003-registry-style-specific-como-padrao.md) | Registry style-specific como padrão (Tailwind v4) | ✅ Accepted | 2025-12-17 | 🔴 Alto |
 
 ### Build System
 
 | # | Título | Status | Data | Impacto |
 |---|--------|--------|------|---------|
 | [0002](0002-ast-para-deteccao-de-dependencias.md) | Análise AST para Detecção de Dependências | ✅ Accepted | 2025-11-16 | 🔴 Alto |
+| [0003](0003-registry-style-specific-como-padrao.md) | Registry style-specific como padrão (Tailwind v4) | ✅ Accepted | 2025-12-17 | 🔴 Alto |
 
 ## 🔍 ADRs por Área
 
 ### Registry & Dependências
 - **ADR-0002**: Análise AST para Detecção de Dependências
+- **ADR-0003**: Registry style-specific como padrão (Tailwind v4)
 
 ### Processo & Documentação
 - **ADR-0001**: Uso de Architecture Decision Records
@@ -47,6 +50,9 @@ Total de ADRs: **2**
 2025-11-16
 ├─ ADR-0001: Uso de ADRs (Meta)
 └─ ADR-0002: Análise AST para Dependências (Técnica)
+
+2025-12-17
+└─ ADR-0003: Registry style-specific como padrão (Tailwind v4)
 ```
 
 ## 🎯 Decisões Principais
@@ -57,6 +63,7 @@ Total de ADRs: **2**
 |------------|-----|--------|--------------------------|
 | ts-morph | [0002](0002-ast-para-deteccao-de-dependencias.md) | API simples, 100% precisão | Regex, TS Compiler API nativo, Parser personalizado |
 | ADR Format | [0001](0001-uso-de-adrs.md) | Padrão da indústria | Wiki, Issues, Comentários no código |
+| Registry style-specific | [0003](0003-registry-style-specific-como-padrao.md) | Tema via cssVars (Tailwind v4) + organização por style | Apenas legacy, Importar componentes do Shadcn |
 
 ### Padrões Estabelecidos
 
@@ -64,6 +71,7 @@ Total de ADRs: **2**
 |--------|-----|-----------|
 | Documentação de Decisões | [0001](0001-uso-de-adrs.md) | Usar ADRs para decisões arquiteturais |
 | Detecção de Dependências | [0002](0002-ast-para-deteccao-de-dependencias.md) | Usar análise AST ao invés de regex |
+| Registry por estilo | [0003](0003-registry-style-specific-como-padrao.md) | Adotar `registry/styles/<style>` como padrão e manter legacy como fallback |
 
 ## 🔄 Dependências entre ADRs
 
@@ -79,9 +87,9 @@ ADR-0001 (Uso de ADRs)
 
 | Área | ADRs Relacionados | Impacto Total |
 |------|------------------|---------------|
-| Build System | 0002 | 🔴 Alto |
-| CLI Commands | - | 🟢 Baixo |
-| Registry | 0002 | 🔴 Alto |
+| Build System | 0002, 0003 | 🔴 Alto |
+| CLI Commands | 0003 | 🟡 Médio |
+| Registry | 0002, 0003 | 🔴 Alto |
 | Documentation | 0001 | 🟢 Baixo |
 
 ### Por Tipo de Mudança
@@ -89,7 +97,7 @@ ADR-0001 (Uso de ADRs)
 | Tipo | Quantidade | ADRs |
 |------|-----------|------|
 | Breaking Change | 0 | - |
-| Nova Feature | 1 | 0002 |
+| Nova Feature | 2 | 0002, 0003 |
 | Melhoria | 1 | 0002 |
 | Processo | 1 | 0001 |
 

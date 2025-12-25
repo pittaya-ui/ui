@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs/promises";
 import { fetchRegistry } from "../utils/registry.js";
 import { isComponentInstalled } from "../utils/component-checker.js";
+import { applyPittayaProjectConfig, loadProjectConfig } from "../utils/project-config.js";
 import { IConfig } from "../interfaces/IConfig.js";
 import { IComponentIndexItem } from "../interfaces/IComponentIndexItem.js";
 
@@ -20,12 +21,12 @@ interface ComponentInfo extends IComponentIndexItem {
 
 export async function list(options: ListOptions) {
   const cwd = process.cwd();
-  const componentsJsonPath = path.join(cwd, "components.json");
 
   let config: IConfig;
   try {
-    const configContent = await fs.readFile(componentsJsonPath, "utf-8");
-    config = JSON.parse(configContent);
+    const loaded = await loadProjectConfig(cwd);
+    config = loaded.config;
+    applyPittayaProjectConfig(loaded.pittaya);
   } catch (error) {
     console.log(chalk.red("\n❌ components.json not found.\n"));
     console.log(
@@ -37,7 +38,7 @@ export async function list(options: ListOptions) {
   const spinner = ora("Fetching components...").start();
   let registry;
   try {
-    registry = await fetchRegistry();
+    registry = await fetchRegistry(config);
     spinner.succeed("Components loaded!");
   } catch (error) {
     spinner.fail("Error loading registry");
@@ -45,14 +46,15 @@ export async function list(options: ListOptions) {
     return;
   }
 
-  const allComponents: IComponentIndexItem[] = registry.components || [];
+  const allComponents: any[] = registry.components || [];
 
   // Check installation status for each component
   const componentsWithStatus: ComponentInfo[] = await Promise.all(
     allComponents.map(async (comp) => {
-      const installed = await isComponentInstalled(comp.slug, config);
+      const slug = comp.slug || comp.name;
+      const installed = await isComponentInstalled(slug, config);
       return {
-        ...comp,
+        ...(comp.slug ? comp : { ...comp, slug }),
         installed,
       };
     })
@@ -137,7 +139,7 @@ function displayComponents(components: ComponentInfo[], options: ListOptions) {
       console.log(`  ${status} ${name}${description}${deps}${internalDeps}`);
     });
 
-    console.log(); // Empty line between categories
+    console.log();
   });
 
   const installedCount = components.filter(c => c.installed).length;

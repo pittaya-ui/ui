@@ -1,0 +1,18 @@
+{
+  "name": "announcement-badge",
+  "type": "registry:ui",
+  "description": "Displays a badge with an icon and a title.",
+  "dependencies": [
+    "class-variance-authority",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "name": "announcement-badge.tsx",
+      "content": "import { cva, VariantProps } from \"class-variance-authority\";\nimport { type LucideIcon } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst announcementContainerVariants = cva(\n  \"flex items-center justify-between gap-2 w-fit bg-background rounded-full px-1 py-0.5 border border-border shadow hover:shadow-md transition-shadow \",\n  {\n    variants: {\n      variant: {\n        glassEffect: \"bg-background/50 backdrop-blur-sm hover:bg-background/70\",\n        default: \"bg-background hover:bg-background/80\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  }\n);\n\nexport function AnnouncementContainer({\n  className,\n  variant,\n  ...props\n}: React.ComponentProps<\"div\"> &\n  VariantProps<typeof announcementContainerVariants>) {\n  return (\n    <div\n      className={announcementContainerVariants({ variant, className })}\n      {...props}\n    />\n  );\n}\n\nexport function AnnouncementSeparator({ className }: { className?: string }) {\n  return <div className={cn(\"bg-accent h-5 w-px\", className)} />;\n}\n\nexport function AnnouncementText({\n  className,\n  text,\n}: React.ComponentProps<\"div\"> & { text: string }) {\n  return (\n    <div\n      className={cn(\n        \"bg-accent border-border rounded-full border px-2 py-1 text-sm font-medium\",\n        className\n      )}\n    >\n      <p>{text}</p>\n    </div>\n  );\n}\n\nexport function AnnouncementIcon({\n  className,\n  icon: Icon,\n}: {\n  className?: string;\n  icon: LucideIcon | string;\n}) {\n  return (\n    <div className=\"px-2\">\n      {typeof Icon === \"string\" ? (\n        <p className={cn(\"text-sm font-medium\", className)}>{Icon}</p>\n      ) : (\n        <Icon className={cn(\"size-4\", className)} />\n      )}\n    </div>\n  );\n}\n\nexport function AnnouncementTitle({\n  className,\n  ...props\n}: React.ComponentProps<\"h3\">) {\n  return (\n    <h3\n      className={cn(\n        \"flex items-center gap-2 px-2 py-1 text-sm font-medium\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n"
+    }
+  ]
+}

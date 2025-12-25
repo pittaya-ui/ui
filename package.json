@@ -1,6 +1,6 @@
 {
   "name": "@pittaya-ui/cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CLI to add the amazing Pittaya UI components to your project",
   "private": true,
   "homepage": "https://pittaya-ui.vercel.app",
@@ -36,5 +36,8 @@
     "@types/node": "^20.19.25",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "postcss": "^8.5.6"
   }
 }

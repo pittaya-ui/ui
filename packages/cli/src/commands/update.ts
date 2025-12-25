@@ -6,8 +6,10 @@ import fs from "fs/promises";
 import { fetchRegistry, getRegistryComponent } from "../utils/registry.js";
 import { transformImports } from "../utils/transformer.js";
 import { isComponentInstalled, resolveTargetPath } from "../utils/component-checker.js";
-import { IConfig } from "../interfaces/IConfig";
-import { IRegistryComponent } from "../interfaces/IRegistryComponent";
+import { applyPittayaProjectConfig, loadProjectConfig } from "../utils/project-config.js";
+import { confirm } from "../utils/confirm.js";
+import { IConfig } from "../interfaces/IConfig.js";
+import { IRegistryComponent } from "../interfaces/IRegistryComponent.js";
 
 interface UpdateOptions {
   all?: boolean;
@@ -24,12 +26,12 @@ interface UpdateResult {
 
 export async function update(components: string[], options: UpdateOptions) {
   const cwd = process.cwd();
-  const componentsJsonPath = path.join(cwd, "components.json");
 
   let config: IConfig;
   try {
-    const configContent = await fs.readFile(componentsJsonPath, "utf-8");
-    config = JSON.parse(configContent);
+    const loaded = await loadProjectConfig(cwd);
+    config = loaded.config;
+    applyPittayaProjectConfig(loaded.pittaya);
   } catch (error) {
     console.log(chalk.red("\n❌ components.json not found.\n"));
     console.log(
@@ -41,7 +43,7 @@ export async function update(components: string[], options: UpdateOptions) {
   const spinner = ora("Fetching registry...").start();
   let registry;
   try {
-    registry = await fetchRegistry();
+    registry = await fetchRegistry(config);
     spinner.succeed("Registry loaded!");
   } catch (error) {
     spinner.fail("Error loading registry");
@@ -70,14 +72,12 @@ export async function update(components: string[], options: UpdateOptions) {
     }
 
     if (!options.yes && !options.force) {
-      const { confirm } = await prompts({
-        type: "confirm",
-        name: "confirm",
-        message: `Update ${componentsToUpdate.length} component(s)?`,
-        initial: true,
-      });
+      const shouldUpdate = await confirm(
+        `Update ${componentsToUpdate.length} component(s)?`,
+        true
+      );
 
-      if (!confirm) {
+      if (!shouldUpdate) {
         console.log(chalk.yellow("\n❌ Update cancelled.\n"));
         return;
       }
@@ -165,7 +165,7 @@ async function updateComponent(
   options: UpdateOptions
 ): Promise<UpdateResult> {
   try {
-    const component: IRegistryComponent = await getRegistryComponent(name);
+    const component: IRegistryComponent = await getRegistryComponent(name, config);
     if (!component) {
       console.log(chalk.red(`   ❌ Component "${name}" not found in registry.`));
       return { name, updated: false, skipped: true, reason: "not found in registry" };
@@ -187,14 +187,9 @@ async function updateComponent(
 
     // Ask for confirmation if not --yes or --force
     if (!options.yes && !options.force) {
-      const { confirm } = await prompts({
-        type: "confirm",
-        name: "confirm",
-        message: `Update ${chalk.bold(name)}?`,
-        initial: true,
-      });
+      const shouldUpdate = await confirm(`Update ${chalk.bold(name)}?`, true);
 
-      if (!confirm) {
+      if (!shouldUpdate) {
         console.log(chalk.yellow(`   ⏭️  Skipped ${name}`));
         return { name, updated: false, skipped: true, reason: "user cancelled" };
       }
