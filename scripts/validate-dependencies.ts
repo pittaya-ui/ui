@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { IRegistryComponent } from "../packages/cli/src/interfaces/IRegistryComponent";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REGISTRY_COMPONENTS_DIR = path.join(__dirname, "../registry/components");
+const REGISTRY_STYLES_DIR = path.join(__dirname, "../registry/styles");
 
 interface ValidationResult {
   component: string;
@@ -73,28 +73,39 @@ async function validateComponent(componentPath: string): Promise<ValidationResul
 async function validateAll() {
   console.log("🔍 Validating dependencies in registry components...\n");
 
-  const files = await fs.readdir(REGISTRY_COMPONENTS_DIR);
-  const jsonFiles = files.filter(f => f.endsWith(".json"));
+  const styleDirs = await fs
+    .readdir(REGISTRY_STYLES_DIR, { withFileTypes: true })
+    .then((entries) => entries.filter((e) => e.isDirectory()).map((e) => e.name))
+    .catch(() => [] as string[]);
+
+  const jsonFiles: Array<{ style: string; filePath: string }> = [];
+  for (const styleName of styleDirs) {
+    const componentsDir = path.join(REGISTRY_STYLES_DIR, styleName, "components");
+    const files = await fs.readdir(componentsDir).catch(() => [] as string[]);
+    for (const file of files) {
+      if (!file.endsWith(".json")) continue;
+      jsonFiles.push({ style: styleName, filePath: path.join(componentsDir, file) });
+    }
+  }
 
   const results: ValidationResult[] = [];
   let hasErrors = false;
 
-  for (const file of jsonFiles) {
-    const filePath = path.join(REGISTRY_COMPONENTS_DIR, file);
-    const result = await validateComponent(filePath);
+  for (const entry of jsonFiles) {
+    const result = await validateComponent(entry.filePath);
     results.push(result);
 
     if (result.missing.length > 0) {
       hasErrors = true;
-      console.log(`❌ ${result.component}`);
+      console.log(`❌ ${result.component} (${entry.style})`);
       console.log(`   Declared: [${result.declared.join(", ") || "none"}]`);
       console.log(`   Detected: [${result.detected.join(", ")}]`);
       console.log(`   Missing:  [${result.missing.join(", ")}]`);
       console.log("");
     } else if (result.detected.length > 0) {
-      console.log(`✅ ${result.component} - ${result.detected.length} dependencies OK`);
+      console.log(`✅ ${result.component} (${entry.style}) - ${result.detected.length} dependencies OK`);
     } else {
-      console.log(`✅ ${result.component} - no external dependencies`);
+      console.log(`✅ ${result.component} (${entry.style}) - no external dependencies`);
     }
   }
 

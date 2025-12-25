@@ -82,6 +82,7 @@ Onde:
 |---|--------|--------|------|
 | [0001](0001-uso-de-adrs.md) | Uso de Architecture Decision Records | Accepted | 2025-11-16 |
 | [0002](0002-ast-para-deteccao-de-dependencias.md) | Análise AST para Detecção de Dependências | Accepted | 2025-11-16 |
+| [0003](0003-registry-style-specific-como-padrao.md) | Registry style-specific como padrão (Tailwind v4) | Accepted | 2025-12-17 |
 
 ## Guias Técnicos
 

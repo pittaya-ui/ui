@@ -16,7 +16,7 @@ export async function isComponentInstalled(
   config: IConfig
 ): Promise<boolean> {
   try {
-    const component: IRegistryComponent = await getRegistryComponent(name);
+    const component: IRegistryComponent = await getRegistryComponent(name, config);
     if (!component) return false;
 
     for (const file of component.files) {
@@ -49,14 +49,18 @@ export async function resolveTargetPath(
   type: string,
   config: IConfig
 ): Promise<string> {
+  const normalized = fileName.replace(/\\/g, "/");
+
   if (type === "registry:ui") {
     const resolvedPath = await resolveAliasPath(config.aliases.ui);
-    return path.join(resolvedPath, fileName);
+    const relative = normalized.replace(/^ui\//, "");
+    return path.join(resolvedPath, relative);
   }
 
   if (type === "registry:lib") {
     const resolvedPath = await resolveAliasPath(config.aliases.lib);
-    return path.join(resolvedPath, fileName);
+    const relative = normalized.replace(/^lib\//, "");
+    return path.join(resolvedPath, relative);
   }
 
   if (type === "registry:hook") {

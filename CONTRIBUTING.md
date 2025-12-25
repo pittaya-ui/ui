@@ -41,8 +41,17 @@ cli/
 │       └── tsup.config.ts
 ├── registry/                # Component registry
 │   ├── schema.json         # Registry schema
-│   ├── index.json          # Component index
-│   └── components/         # Individual components
+│   └── styles/             # Styles and components
+│       ├── new-york/
+│       │   ├── index.json
+│       │   └── components/
+│       ├── default/
+│       │   ├── index.json
+│       │   └── components/
+│       └── pittaya/
+│           ├── index.json
+│           └── components/
+
 ├── scripts/                # Build scripts
 │   └── build-registry.ts   # Registry builder
 ├── .env.example            # Environment template
@@ -148,8 +157,8 @@ npm run build:registry
 The registry builder:
 1. Reads components from `components-index.ts`
 2. Extracts dependencies from code
-3. Generates individual JSONs in `registry/components/`
-4. Updates `registry/index.json`
+3. Generates JSONs in `registry/styles/<style>/components/`
+4. Updates `registry/styles/<style>/index.json`
 
 ## 📝 Adding Components to Registry
 
@@ -162,7 +171,7 @@ The registry builder:
 
 ### Manual (Advanced)
 
-Create a JSON file in `registry/components/`:
+Create a JSON file in `registry/styles/<style>/components/`:
 
 ```json
 {
@@ -182,7 +191,7 @@ Create a JSON file in `registry/components/`:
 }
 ```
 
-Update `registry/index.json` to include the component.
+Update `registry/styles/<style>/index.json` to include the component.
 
 ## 🧪 Testing Changes
 

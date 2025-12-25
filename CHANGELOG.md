@@ -5,6 +5,27 @@ All notable changes to the Pittaya CLI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- ✨ Style-specific components
+  - The CLI installs components from `registry/styles/<style>/...` according to the `style` chosen in `components.json`
+  - `init` automatically applies the selected style's `cssVars` to `globals.css` (Tailwind v4)
+- ✨ New `pittaya` style (more rounded) with `primary` derived from the `pittaya` token
+
+### Changed
+- 🔧 Registry is now **style-only** (`registry/styles/<style>/...`)
+  - Components with the same name can have different implementations/styles per `style`
+  - Mechanism inspired by shadcn/ui (v4): styles, style-specific registry, and application of `cssVars`
+  - `default` and `new-york` now have intentional visual differences (inspired by shadcn/ui)
+- 🔧 `init`/registry fetch during development now prefers the local `registry/` when available
+
+### Removed
+- 🗑️ Removed legacy registry flow (`registry/index.json` and `registry/components/*`)
+
+### Documentation
+- 📚 Documentation and automation updated to reflect the registry's style-only structure
+
 ## [0.0.8] - 2025-12-02
 
 ### Added
@@ -191,7 +212,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [GitHub Repository](https://github.com/pittaya-ui/cli)
 - [Documentation](https://pittaya-ui.vercel.app)
 
-[Unreleased]: https://github.com/pittaya-ui/cli/compare/v0.0.5...HEAD
+[Unreleased]: https://github.com/pittaya-ui/cli/compare/v0.0.8...HEAD
 [0.0.5]: https://github.com/pittaya-ui/cli/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/pittaya-ui/cli/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/pittaya-ui/cli/compare/v0.0.2...v0.0.3

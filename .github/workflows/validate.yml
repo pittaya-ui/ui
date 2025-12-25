@@ -3,13 +3,13 @@ name: Validate Registry
 on:
   pull_request:
     paths:
-      - 'registry/components/**'
+      - 'registry/styles/**'
       - 'scripts/build-registry.ts'
       - 'scripts/validate-dependencies.ts'
   push:
     branches: [main]
     paths:
-      - 'registry/components/**'
+      - 'registry/styles/**'
 
 jobs:
   validate-deps:

@@ -594,7 +594,7 @@ This will check all components and report any missing dependencies:
 
 **Fix missing dependencies:**
 
-1. Open the component JSON file (e.g., `registry/components/installation-section.json`)
+1. Open the component JSON file (e.g., `registry/styles/pittaya/components/installation-section.json`)
 2. Add missing dependencies to the `dependencies` array
 3. Run `npm run validate:deps` again to confirm
 
@@ -692,7 +692,7 @@ User runs: npx pittaya add orbit-images
 
 - [GitHub - CLI](https://github.com/pittaya-ui/cli)
 - [GitHub - UI Components](https://github.com/pittaya-ui/ui)
-- [Component Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/index.json)
+- [Component Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/styles/new-york/index.json)
 
 ## 🤝 Contributing
 

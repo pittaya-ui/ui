@@ -35,12 +35,16 @@
   "homepage": "https://pittaya-ui.vercel.app",
   "dependencies": {
     "chalk": "^5.3.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "commander": "^12.0.0",
     "execa": "^9.0.0",
     "https-proxy-agent": "^7.0.4",
     "node-fetch": "^3.3.2",
     "ora": "^8.0.1",
+    "postcss": "^8.4.38",
     "prompts": "^2.4.2",
+    "tailwind-merge": "^3.4.0",
     "ts-morph": "^24.0.0",
     "zod": "^3.23.0"
   },
