@@ -84,6 +84,24 @@
       "description": "Displays installation instructions with code snippets."
     },
     {
+      "name": "input",
+      "type": "registry:ui",
+      "files": [
+        "input"
+      ],
+      "category": "Forms",
+      "description": "A versatile input field with multiple variants including floating labels and outlined styles."
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "files": [
+        "label"
+      ],
+      "category": "Forms",
+      "description": "An accessible label component that renders a caption associated with a control."
+    },
+    {
       "name": "multi-select",
       "type": "registry:ui",
       "files": [
