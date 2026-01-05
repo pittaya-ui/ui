@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pittaya UI Registry Schema",
+  "description": "JSON Schema for Pittaya UI component registry files",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/index"
+    },
+    {
+      "$ref": "#/definitions/component"
+    }
+  ],
+  "definitions": {
+    "index": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "Reference to the schema file"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Registry version following semantic versioning"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/componentReference"
+          },
+          "description": "List of components available in this registry"
+        }
+      },
+      "required": ["version", "components"],
+      "additionalProperties": false
+    },
+    "componentReference": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Component name/slug"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["registry:ui", "registry:lib", "registry:style"],
+          "description": "Component type"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Component file names"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Style", "Components", "Actions", "Navigation", "Forms", "Overlays", "Library", "Documentation"],
+          "description": "Component category for organization"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable component description"
+        }
+      },
+      "required": ["name", "type", "files", "category", "description"],
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "Reference to the schema file"
+        },
+        "name": {
+          "type": "string",
+          "description": "Component name/slug"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["registry:ui", "registry:lib", "registry:style"],
+          "description": "Component type"
+        },
+        "author": {
+          "type": "string",
+          "description": "Component author"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable component description"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "NPM package dependencies"
+        },
+        "devDependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "NPM dev dependencies"
+        },
+        "registryDependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other Pittaya components this component depends on"
+        },
+        "cssVars": {
+          "$ref": "#/definitions/cssVars"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/file"
+          },
+          "description": "Component files with content"
+        }
+      },
+      "required": ["name", "type", "files"],
+      "additionalProperties": false
+    },
+    "cssVars": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "type": "object",
+          "patternProperties": {
+            "^color-.*$": {
+              "type": "string",
+              "description": "CSS custom property reference"
+            },
+            "^radius-.*$": {
+              "type": "string",
+              "description": "Border radius CSS value"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Theme CSS variables mapping"
+        },
+        "light": {
+          "type": "object",
+          "patternProperties": {
+            "^(background|foreground|card|popover|primary|secondary|muted|accent|destructive|border|input|ring|chart-|sidebar|pittaya|radius)$": {
+              "type": "string",
+              "description": "Light theme CSS value"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Light theme CSS variables"
+        },
+        "dark": {
+          "type": "object",
+          "patternProperties": {
+            "^(background|foreground|card|popover|primary|secondary|muted|accent|destructive|border|input|ring|chart-|sidebar|pittaya|radius)$": {
+              "type": "string",
+              "description": "Dark theme CSS value"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Dark theme CSS variables"
+        }
+      },
+      "additionalProperties": false
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "File name (without extension for registry files)"
+        },
+        "content": {
+          "type": "string",
+          "description": "File content as string"
+        },
+        "target": {
+          "type": "string",
+          "description": "Custom target path for the file"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["file", "registry:ui", "registry:lib", "registry:style"],
+          "description": "File type"
+        }
+      },
+      "required": ["name", "content"],
+      "additionalProperties": false
+    }
+  }
+}
