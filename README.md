@@ -1,14 +1,16 @@
 # Pittaya UI CLI
 
-CLI to add Pittaya UI components to your React/Next.js project
+A powerful CLI to add Pittaya UI components to your React/Next.js project with intelligent dependency management and AST-based detection.
 
 ## 🚀 Installation
 
-No installation required! Use directly with `npx` (Soon)
+No installation required! Use directly with `npx`:
 
 ```bash
 npx pittaya@latest init
 ```
+
+**Current Version:** 0.0.9 ([View Changelog](./CHANGELOG.md))
 
 ## ✨ Features
 
@@ -23,6 +25,9 @@ npx pittaya@latest init
 - 🎨 **Import Transformation** - Automatically adjusts imports to your project structure
 - 🌐 **GitHub Registry** - Components served via free CDN
 - 🔄 **Idempotent** - Safe to run multiple times
+- 🎨 **Multiple Styles** - Choose from `default`, `new-york`, or `pittaya` design styles
+- 📁 **Auto-Detection** - Automatically detects `src/` directory structure
+- 🐛 **Debug Tools** - Built-in diagnostics for troubleshooting
 
 > 📖 See [ROADMAP.md](./ROADMAP.md) for upcoming features and completed milestones
 
@@ -39,6 +44,7 @@ This command will:
 - Create a `components.json` file with your preferences
 - Install required base dependencies
 - Configure import aliases
+- Apply style-specific CSS variables to your globals.css
 
 #### Options
 
@@ -85,11 +91,11 @@ npx pittaya@latest add
 
 **Flag Comparison:**
 
-| Flag                         | Sobrescreve Arquivos | Instala Dependências Automaticamente |
-| ---------------------------- | -------------------- | ------------------------------------- |
-| `--yes`                    | ✅ Sim               | ❌ Não                               |
-| `--add-missing-deps`       | ❌ Não              | ✅ Sim                                |
-| `--yes --add-missing-deps` | ✅ Sim               | ✅ Sim                                |
+| Flag                       | Overwrites Files | Auto-Installs Dependencies |
+| -------------------------- | ---------------- | -------------------------- |
+| `--yes`                    | ✅ Yes           | ❌ No                      |
+| `--add-missing-deps`       | ❌ No            | ✅ Yes                     |
+| `--yes --add-missing-deps` | ✅ Yes           | ✅ Yes                     |
 
 ### ⏭️ Smart Component Installation
 
@@ -140,11 +146,11 @@ npx pittaya@latest add button
 **Output:**
 
 ```
-⚠️  button requer as seguintes dependências:
+⚠️  button requires the following dependencies:
 
   • @radix-ui/react-slot
 
-? Deseja instalar as dependências agora? › (Y/n)
+? Do you want to install the dependencies now? › (Y/n)
 ```
 
 **Skip the prompt with `--add-missing-deps`:**
@@ -291,6 +297,7 @@ Total: 3 components (2 installed, 1 available)
 ```
 
 **Legend:**
+
 - ✓ = Installed
 - ○ = Available (not installed)
 - [N deps] = Number of npm dependencies
@@ -305,6 +312,7 @@ npx pittaya@latest debug --component installation-section
 ```
 
 This will show:
+
 - Project structure (src/ vs root)
 - Resolved alias paths
 - Expected file locations
@@ -312,15 +320,45 @@ This will show:
 - Similar files found (helps identify naming issues)
 
 **Common issues it helps solve:**
+
 - File name mismatches (e.g., `InstallationSection.tsx` vs `installation-section.tsx`)
 - Wrong directory structure
 - Incorrect `components.json` configuration
+
+### View credits
+
+Show the creators and contributors of Pittaya UI:
+
+```bash
+npx pittaya@latest credits
+```
 
 ## 🎨 Available Components
 
 ### Actions
 
+- **announcement-badge** - Displays an announcement badge with customizable styles
 - **button** - Displays a button or a component that looks like a button
+- **copy-button** - A button that copies content to clipboard
+
+### Forms
+
+- **checkbox** - A checkbox form control
+- **input** - Text input field
+- **label** - Form label component
+- **multi-select** - Multi-selection dropdown component
+- **radio-group** - Radio button group
+- **textarea** - Multiline text input
+
+### UI Components
+
+- **badge** - Displays a badge with customizable styles
+- **card** - Card container component
+- **carousel** - Image carousel component
+- **command** - Command palette component
+- **orbit-images** - Displays images in an orbiting motion
+- **popover** - Popover overlay component
+- **tabs** - Tab navigation component
 
 ### Documentation
 
@@ -328,9 +366,9 @@ This will show:
 
 ### Library
 
-- **utils** - Utility functions for className
+- **utils** - Utility functions for className management
 
-> 💡 **Note:** New components are automatically added when you add them to the `components-index.ts` file in the UI project and run `npm run build:registry`.
+> 💡 **Note:** Components are available in three styles: `default`, `new-york`, and `pittaya`. Each style has its own visual design and can include different implementations.
 
 ## 💡 Practical Examples
 
@@ -387,8 +425,8 @@ The `components.json` file stores your preferences:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/schema.json",
-  "style": "new-york",
+  "$schema": "https://raw.githubusercontent.com/pittaya-ui/ui/main/registry/schema.json",
+  "style": "pittaya",
   "rsc": true,
   "tsx": true,
   "tailwind": {
@@ -408,6 +446,14 @@ The `components.json` file stores your preferences:
   "iconLibrary": "lucide"
 }
 ```
+
+### Available Styles
+
+- **`default`** - Clean and minimal design
+- **`new-york`** - Modern and sophisticated look (inspired by shadcn/ui)
+- **`pittaya`** - Rounded and vibrant design with primary colors
+
+Each style provides different visual implementations of the same components.
 
 ## 🔄 Building Registry (For Maintainers)
 
@@ -433,8 +479,8 @@ Components can declare dependencies on other Pittaya components using `internalD
 {
   "name": "orbit-images",
   "registryDependencies": [
-    "button",  // ⬅️ From internalDependencies
-    "utils"    // ⬅️ Auto-detected from code
+    "button", // ⬅️ From internalDependencies
+    "utils" // ⬅️ Auto-detected from code via AST
   ]
 }
 ```
@@ -447,7 +493,7 @@ npx pittaya add orbit-images
 
 This will automatically install: `orbit-images` → `button` → `utils`
 
-> 📖 **Learn more:** See [INTERNAL_DEPENDENCIES.md](./INTERNAL_DEPENDENCIES.md) for detailed documentation.
+> 📖 **Learn more:** See [INTERNAL_DEPENDENCIES.md](./docs/INTERNAL_DEPENDENCIES.md) for detailed documentation.
 
 ---
 
@@ -504,12 +550,33 @@ npm run build:registry
 - Working on UI and CLI simultaneously
 - No internet connection
 
----
+### 📦 Publishing
+
+#### 1. Build the CLI
+
+```bash
+cd packages/cli
+npm run build
+```
+
+#### 2. Test Locally
+
+```bash
+# Test the built CLI
+npm link
+pittaya --version
+```
+
+#### 3. Publish to npm
+
+```bash
+npm run pub:release
+```
 
 ✅ **Expected output:**
 
 ```
-+ pittaya@0.0.1
++ pittaya@0.0.9
 ```
 
 #### 4. Test Published Package
@@ -524,7 +591,7 @@ npx pittaya@latest init -y
 npx pittaya@latest add button
 
 # Verify
-cat components/pittaya/ui/button.tsx
+cat src/components/pittaya/ui/button.tsx
 npm run dev
 ```
 
@@ -562,16 +629,16 @@ npm run pub:release
 # 4. Commit version bump
 cd ../..
 git add packages/cli/package.json
-git commit -m "chore: bump cli to 0.0.2"
+git commit -m "chore: bump cli to 0.0.10"
 git push
 ```
 
 ### Validate Dependencies
 
-Before publishing or committing registry changes, you can manually validate that all components have correct NPM dependencies declared - although the registry makes it automatically:
+Before publishing or committing registry changes, validate that all components have correct NPM dependencies declared:
 
 ```bash
-# From cli/ directory
+# From root directory
 npm run validate:deps
 ```
 
@@ -587,9 +654,9 @@ This will check all components and report any missing dependencies:
    Missing:  [lucide-react, sonner]
 
 📊 Summary:
-   Total components: 6
+   Total components: 19
    With errors: 1
-   Valid: 5
+   Valid: 18
 ```
 
 **Fix missing dependencies:**
@@ -626,17 +693,18 @@ npm login
 npm publish --otp=123456
 ```
 
----
-
 ## 🎯 How It Works
 
-1. **GitHub Registry** - Components are hosted via GitHub Raw (free CDN)
-2. **Smart Detection** - CLI checks if components are already installed before adding them
-3. **Internal Dependencies** - Components can declare dependencies on other Pittaya components via `internalDependencies`
-4. **Automatic Installation** - NPM dependencies and related components are installed automatically
-5. **Skip Installed** - Already installed components are skipped to preserve customizations
-6. **Import Transformation** - Imports are adjusted according to your aliases
-7. **No Vendor Lock-in** - Components are copied to your project, you have full control
+1. **Style-Specific Registry** - Components are organized by style (`default`, `new-york`, `pittaya`)
+2. **GitHub Registry** - Components are hosted via GitHub Raw (free CDN)
+3. **Smart Detection** - CLI checks if components are already installed before adding them
+4. **AST-Based Analysis** - Uses TypeScript Compiler API to detect dependencies with 100% accuracy
+5. **Internal Dependencies** - Components can declare dependencies on other Pittaya components
+6. **Automatic Installation** - NPM dependencies and related components are installed automatically
+7. **Skip Installed** - Already installed components are skipped to preserve customizations
+8. **Import Transformation** - Imports are adjusted according to your aliases
+9. **Auto-Detection** - Automatically detects `src/` directory structure
+10. **No Vendor Lock-in** - Components are copied to your project, you have full control
 
 ### Installation Flow
 
@@ -690,13 +758,15 @@ User runs: npx pittaya add orbit-images
 
 ### Repository
 
-- [GitHub - CLI](https://github.com/pittaya-ui/cli)
-- [GitHub - UI Components](https://github.com/pittaya-ui/ui)
-- [Component Registry](https://raw.githubusercontent.com/pittaya-ui/cli/main/registry/styles/new-york/index.json)
+- [GitHub - CLI & UI Monorepo](https://github.com/pittaya-ui/ui)
+- [Component Registry - Default Style](https://raw.githubusercontent.com/pittaya-ui/ui/main/registry/styles/default/index.json)
+- [Component Registry - New York Style](https://raw.githubusercontent.com/pittaya-ui/ui/main/registry/styles/new-york/index.json)
+- [Component Registry - Pittaya Style](https://raw.githubusercontent.com/pittaya-ui/ui/main/registry/styles/pittaya/index.json)
 
 ## 🤝 Contributing
 
 Contributions are welcome! See our:
+
 - [Contributing Guide](CONTRIBUTING.md) - How to contribute
 - [Roadmap](ROADMAP.md) - Features we're working on
 - [ADRs](./docs/adr/README.md) - Architectural decisions
