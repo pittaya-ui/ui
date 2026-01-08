@@ -1,0 +1,19 @@
+{
+  "name": "checkbox",
+  "type": "registry:ui",
+  "description": "An accessible checkbox with optional animation variant.",
+  "dependencies": [
+    "@radix-ui/react-checkbox",
+    "class-variance-authority",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "name": "checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { CheckIcon } from \"lucide-react\";\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst checkboxVariants = cva(\"\", {\n  variants: {\n    variant: {\n      default: \"transition-none\",\n      animated:\n        \"data-[state=checked]:animate-in data-[state=checked]:zoom-in-50 data-[state=checked]:duration-200\",\n    },\n  },\n  defaultVariants: {\n    variant: \"default\",\n  },\n});\n\ninterface CheckboxProps\n  extends React.ComponentProps<typeof CheckboxPrimitive.Root>,\n    VariantProps<typeof checkboxVariants> {}\n\nfunction Checkbox({ className, variant, ...props }: CheckboxProps) {\n  return (\n    <CheckboxPrimitive.Root\n      data-slot=\"checkbox\"\n      className={cn(\n        \"peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50\",\n        className\n      )}\n      {...props}\n    >\n      <CheckboxPrimitive.Indicator\n        data-slot=\"checkbox-indicator\"\n        className={cn(\n          \"grid place-content-center text-current\",\n          checkboxVariants({ variant })\n        )}\n      >\n        <CheckIcon className=\"size-3.5\" />\n      </CheckboxPrimitive.Indicator>\n    </CheckboxPrimitive.Root>\n  );\n}\n\nexport { Checkbox };\n"
+    }
+  ]
+}
