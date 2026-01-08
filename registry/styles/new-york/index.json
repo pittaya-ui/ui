@@ -57,6 +57,15 @@
       "description": "Displays a carousel of images or content."
     },
     {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "files": [
+        "checkbox"
+      ],
+      "category": "Forms",
+      "description": "An accessible checkbox with optional animation variant."
+    },
+    {
       "name": "command",
       "type": "registry:ui",
       "files": [
@@ -129,6 +138,15 @@
       "description": "A floating content container positioned relative to a trigger."
     },
     {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "files": [
+        "radio-group"
+      ],
+      "category": "Forms",
+      "description": "A set of checkable buttons—known as radio buttons—where no more than one can be checked at a time."
+    },
+    {
       "name": "tabs",
       "type": "registry:ui",
       "files": [
@@ -136,6 +154,15 @@
       ],
       "category": "Navigation",
       "description": "A set of layered sections of content—known as tab panels—that are displayed one at a time."
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "files": [
+        "textarea"
+      ],
+      "category": "Forms",
+      "description": "A flexible textarea for multi-line text input, with examples including expanding and scrollable variants."
     },
     {
       "name": "utils",
