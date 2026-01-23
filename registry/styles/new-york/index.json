@@ -147,6 +147,15 @@
       "description": "A set of checkable buttons—known as radio buttons—where no more than one can be checked at a time."
     },
     {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "files": [
+        "skeleton"
+      ],
+      "category": "Feedback",
+      "description": "A placeholder component that displays a visual representation of loading content with customizable animation variants."
+    },
+    {
       "name": "tabs",
       "type": "registry:ui",
       "files": [

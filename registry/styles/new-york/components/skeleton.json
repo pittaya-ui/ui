@@ -1,0 +1,17 @@
+{
+  "name": "skeleton",
+  "type": "registry:ui",
+  "description": "A placeholder component that displays a visual representation of loading content with customizable animation variants.",
+  "dependencies": [
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "name": "skeleton.tsx",
+      "content": "\"use client\";\n\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst skeletonVariants = cva(\n  \"bg-accent rounded-md overflow-hidden relative\",\n  {\n    variants: {\n      variant: {\n        pulse: \"animate-pulse\",\n        shimmer:\n          \"[--shimmer-duration:2.5s] before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_var(--shimmer-duration)_cubic-bezier(0.4,0,0.2,1)_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent dark:before:via-white/20\",\n      },\n    },\n    defaultVariants: {\n      variant: \"pulse\",\n    },\n  }\n);\n\nexport interface SkeletonProps\n  extends React.ComponentProps<\"div\">,\n    VariantProps<typeof skeletonVariants> {}\n\nfunction Skeleton({ className, variant, ...props }: SkeletonProps) {\n  return (\n    <>\n      <style jsx>{`\n        @keyframes shimmer {\n          0% {\n            transform: translateX(-100%);\n          }\n          100% {\n            transform: translateX(200%);\n          }\n        }\n      `}</style>\n      <div\n        data-slot=\"skeleton\"\n        className={cn(skeletonVariants({ variant }), className)}\n        {...props}\n      />\n    </>\n  );\n}\n\nexport { Skeleton, skeletonVariants };\n"
+    }
+  ]
+}

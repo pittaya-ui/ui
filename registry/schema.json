@@ -55,7 +55,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["Style", "Components", "Actions", "Navigation", "Forms", "Overlays", "Library", "Documentation"],
+          "enum": ["Style", "Components", "Actions", "Navigation", "Forms", "Overlays", "Feedback", "Library", "Documentation"],
           "description": "Component category for organization"
         },
         "description": {
