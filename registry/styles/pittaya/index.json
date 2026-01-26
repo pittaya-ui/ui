@@ -147,6 +147,15 @@
       "description": "A set of checkable buttons—known as radio buttons—where no more than one can be checked at a time."
     },
     {
+      "name": "select",
+      "type": "registry:ui",
+      "files": [
+        "select"
+      ],
+      "category": "Forms",
+      "description": "An accessible dropdown select component for choosing a single option from a list of choices."
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "files": [
@@ -172,6 +181,15 @@
       ],
       "category": "Forms",
       "description": "A flexible textarea for multi-line text input, with examples including expanding and scrollable variants."
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "files": [
+        "tooltip"
+      ],
+      "category": "Overlays",
+      "description": "Contextual hint overlay with animated variants for delightful UX."
     },
     {
       "name": "utils",
