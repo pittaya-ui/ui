@@ -21,6 +21,15 @@
       "description": "Displays a badge with an icon and a title."
     },
     {
+      "name": "avatar",
+      "type": "registry:ui",
+      "files": [
+        "avatar"
+      ],
+      "category": "Components",
+      "description": "Displays a user avatar with image, fallback, and group support."
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "files": [
@@ -163,6 +172,15 @@
       ],
       "category": "Feedback",
       "description": "A placeholder component that displays a visual representation of loading content with customizable animation variants."
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "files": [
+        "switch"
+      ],
+      "category": "Forms",
+      "description": "A toggle switch component with glassmorphism variant and customizable glow effects."
     },
     {
       "name": "tabs",
