@@ -7,6 +7,7 @@ import { diff } from "./commands/diff.js";
 import { update } from "./commands/update.js";
 import { list } from "./commands/list.js";
 import { debug } from "./commands/debug.js";
+import { showBanner } from "./utils/banner.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -70,10 +71,27 @@ program
   .action(credits);
 
 program
+  .command("banner")
+  .description("Show the amazing Pittaya banner")
+  .action(showBanner);
+
+program
   .command("debug")
   .description("Debug component installation issues")
   .option("-c, --component <name>", "Component name to debug")
   .action(debug);
 
-program.parse();
+async function run() {
+  const args = process.argv.slice(2);
+  const isHelpOrVersion = args.some(arg => ["--help", "-h", "--version", "-v"].includes(arg));
+  const isBannerCommand = args.length > 0 && args[0] === "banner";
+  
+  if (!isHelpOrVersion && !isBannerCommand) {
+    await showBanner();
+  }
+  
+  program.parse();
+}
+
+run();
 
