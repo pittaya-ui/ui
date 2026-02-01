@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { add } from "./commands/add.js";
+import { remove } from "./commands/remove.js";
 import { init } from "./commands/init.js";
 import { credits } from "./commands/credits.js";
 import { diff } from "./commands/diff.js";
@@ -40,6 +41,13 @@ program
   .option("-a, --all", "Add all available components")
   .option("--add-missing-deps", "Automatically install missing dependencies")
   .action(add);
+
+program
+  .command("remove")
+  .description("Remove a component from your project")
+  .argument("[components...]", "Component names to remove")
+  .option("-y, --yes", "Skip confirmation prompts")
+  .action(remove);
 
 program
   .command("diff")
@@ -84,9 +92,10 @@ program
 async function run() {
   const args = process.argv.slice(2);
   const isHelpOrVersion = args.some(arg => ["--help", "-h", "--version", "-v"].includes(arg));
-  const isBannerCommand = args.length > 0 && args[0] === "banner";
+  const isInitCommand = args.length > 0 && args[0] === "init";
+  const isCreditsCommand = args.length > 0 && args[0] === "credits";
   
-  if (!isHelpOrVersion && !isBannerCommand) {
+  if (isInitCommand || isCreditsCommand) {
     await showBanner();
   }
   
