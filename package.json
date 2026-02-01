@@ -4,6 +4,7 @@
   "description": "CLI to add the amazing Pittaya UI components to your project",
   "private": true,
   "homepage": "https://pittaya-ui.vercel.app",
+  
   "bugs": {
     "url": "https://github.com/pittaya-ui/ui/issues"
   },
