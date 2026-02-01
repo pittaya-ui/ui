@@ -19,6 +19,7 @@ npx pittaya@latest init
 - 🛡️ **Preserves Customizations** - Won't overwrite your modified components
 - 📦 **Internal Dependencies** - Components can declare dependencies on other Pittaya components
 - 🤖 **AST-Based Detection** - 100% precision in detecting component dependencies using TypeScript Compiler API
+- 🗑️ **Easy Removal** - Remove components and clean up empty directories with a single command
 - ⚡ **Fast & Efficient** - Only installs what's needed
 - 🔄 **Update Management** - Check for updates and update components easily
 - 📋 **Component Discovery** - List all available and installed components with detailed information
@@ -261,47 +262,31 @@ npx pittaya@latest list
 
 This will show all components from the registry, organized by category, with installation status.
 
-#### Show only installed components
+#### Options
+
+- `--installed` - Show only installed components
+- `--available` - Show only available components
+- `--json` - Output in JSON format
+
+### Remove components
+
+Remove installed components from your project:
 
 ```bash
-npx pittaya@latest list --installed
+npx pittaya@latest remove button
 ```
 
-#### Show only available components
+#### Interactive mode
+
+If you don't specify components, it will show a list of installed components to select for removal:
 
 ```bash
-npx pittaya@latest list --available
+npx pittaya@latest remove
 ```
 
-#### JSON output
+#### Options
 
-For programmatic use:
-
-```bash
-npx pittaya@latest list --json
-```
-
-**Output:**
-
-```
-📋 All Components
-
-Actions:
-  ✓ button - Displays a button or a component that looks like a button [1 deps]
-  ○ dropdown-menu - Displays a menu to the user [requires: button]
-
-Documentation:
-  ✓ installation-section - Displays installation instructions [2 deps]
-
-Total: 3 components (2 installed, 1 available)
-```
-
-**Legend:**
-
-- ✓ = Installed
-- ○ = Available (not installed)
-- [N deps] = Number of npm dependencies
-- [requires: X, Y] = Requires other Pittaya components
+- `-y, --yes` - Skip confirmation prompt
 
 ### Debug component issues
 
@@ -379,7 +364,7 @@ npx pittaya@latest credits
 npx pittaya add button
 
 # 2. Customize it in your project
-# Edit: src/components/pittaya/ui/button.tsx
+# Edit: src/components/ui/button.tsx
 # Add your own styles, logic, etc.
 
 # 3. Install other components that depend on button
@@ -439,7 +424,7 @@ The `components.json` file stores your preferences:
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "ui": "@/components/pittaya/ui",
+    "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
@@ -591,7 +576,7 @@ npx pittaya@latest init -y
 npx pittaya@latest add button
 
 # Verify
-cat src/components/pittaya/ui/button.tsx
+cat src/components/ui/button.tsx
 npm run dev
 ```
 
@@ -721,7 +706,7 @@ User runs: npx pittaya add orbit-images
    ├─ Check if button is installed
    │  └─ Not installed, install button
    │     ├─ Check NPM deps: @radix-ui/react-slot
-   │     └─ Install to: src/components/pittaya/ui/button.tsx
+   │     └─ Install to: src/components/ui/button.tsx
    │
    └─ Check if utils is installed
       └─ Not installed, install utils
@@ -729,7 +714,7 @@ User runs: npx pittaya add orbit-images
          └─ Install to: src/lib/utils.ts
 
 4. Install orbit-images ✓
-   └─ Install to: src/components/pittaya/ui/orbit-images.tsx
+   └─ Install to: src/components/ui/orbit-images.tsx
 
 ✅ Done! All components and dependencies installed.
 ```

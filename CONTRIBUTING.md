@@ -283,7 +283,7 @@ pittaya init  # Interactive mode to choose style
 pittaya add button
 
 # Verify (src/ or root structure)
-ls -la src/components/pittaya/ui/button.tsx
+ls -la src/components/ui/button.tsx
 
 # Test with dependencies
 pittaya add orbit-images  # Has dependencies: button, utils
