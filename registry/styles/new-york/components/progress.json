@@ -1,0 +1,18 @@
+{
+  "name": "progress",
+  "type": "registry:ui",
+  "description": "Displays an indicator showing the completion progress of a task or operation.",
+  "dependencies": [
+    "@radix-ui/react-progress",
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "name": "progress.tsx",
+      "content": "import * as ProgressPrimitive from \"@radix-ui/react-progress\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst progressVariants = cva(\n  \"relative h-2 w-full overflow-hidden rounded-full bg-primary/20\",\n  {\n    variants: {\n      variant: {\n        default: \"[&>div]:bg-primary\",\n        secondary: \"[&>div]:bg-secondary\",\n        destructive: \"[&>div]:bg-destructive\",\n        success: \"[&>div]:bg-green-600\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  }\n);\n\nconst Progress = React.forwardRef<\n  React.ElementRef<typeof ProgressPrimitive.Root>,\n  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> &\n    VariantProps<typeof progressVariants>\n>(({ className, value, variant, ...props }, ref) => (\n  <ProgressPrimitive.Root\n    ref={ref}\n    className={cn(progressVariants({ variant }), className)}\n    {...props}\n  >\n    <ProgressPrimitive.Indicator\n      className=\"h-full w-full flex-1 transition-all duration-300 ease-in-out\"\n      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}\n    />\n  </ProgressPrimitive.Root>\n));\nProgress.displayName = ProgressPrimitive.Root.displayName;\n\nexport { Progress, progressVariants };\n"
+    }
+  ]
+}

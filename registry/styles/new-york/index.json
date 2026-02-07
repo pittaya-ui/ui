@@ -147,6 +147,15 @@
       "description": "A floating content container positioned relative to a trigger."
     },
     {
+      "name": "progress",
+      "type": "registry:ui",
+      "files": [
+        "progress"
+      ],
+      "category": "Feedback",
+      "description": "Displays an indicator showing the completion progress of a task or operation."
+    },
+    {
       "name": "radio-group",
       "type": "registry:ui",
       "files": [
